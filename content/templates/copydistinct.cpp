@@ -22,7 +22,9 @@ int copyDistinct(int *source, int *dest, int anzahl)
 void eval()
 {
     int a1[20];
-    int a2[20];
+    // Die Initialisierung hält die Vorlage auch vor der eigenen Lösung
+    // ausführbar; copyDistinct() soll die benötigten Werte überschreiben.
+    int a2[20] = {};
     _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5 for (int i = 0; i < i1; i++)
         a1[i] = i;
     a1[3] = i2;

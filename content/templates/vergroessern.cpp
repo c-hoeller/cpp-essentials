@@ -16,7 +16,9 @@ int *vergroessern(int *arr, int laenge_arr)
 
     // TODO: Ihre Lösung hier
 
-    return nullptr;
+    // Neutrales, aber gültiges Ergebnis, damit das Testgerüst mit
+    // simulierter Eingabe nicht abstürzt, bevor die Lösung ergänzt ist.
+    return new int[laenge_arr + 2]{};
 }
 
 // Die Methode eval darf nicht verändert werden

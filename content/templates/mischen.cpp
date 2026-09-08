@@ -15,7 +15,9 @@ int *mischen(int *arr1, int *arr2, int laenge_arr)
 {
     // TODO: Ihre Lösung hier
 
-    return nullptr;
+    // Neutrales, aber gültiges Ergebnis, damit das Testgerüst mit
+    // simulierter Eingabe nicht abstürzt, bevor die Lösung ergänzt ist.
+    return new int[2 * laenge_arr]{};
 }
 
 // Die Methode eval darf nicht verändert werden

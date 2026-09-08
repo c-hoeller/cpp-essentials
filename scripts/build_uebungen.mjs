@@ -173,7 +173,9 @@ const TEMPLATES = {
     return 0;
 }`,
     evalBody: `    int a1[20];
-    int a2[20];
+    // Die Initialisierung hält die Vorlage auch vor der eigenen Lösung
+    // ausführbar; copyDistinct() soll die benötigten Werte überschreiben.
+    int a2[20] = {};
     _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5 for (int i = 0; i < i1; i++)
         a1[i] = i;
     a1[3] = i2;
@@ -237,6 +239,21 @@ const TEMPLATES = {
     evalBody: `    _AKAD_IND1 cout << kaufrund(d1) << endl;`,
   }),
 
+  maxpos: harnessTemplate({
+    macros: ["_AKAD_INI1"],
+    body: `int maxpos(int *arr, int len)
+{
+    printf("%s\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return 0;
+}`,
+    evalBody: `    _AKAD_INI1
+    int ia[10] = { 4,1,2,8,9,1,3,9,2,4 };
+    cout << maxpos(&(ia[i1]), 10 - i1) << endl;`,
+  }),
+
   mehrzeilig: harnessTemplate({
     macros: ["_AKAD_INS1"],
     body: `void ausgabeMehrzeilig(const string &str)
@@ -252,7 +269,9 @@ const TEMPLATES = {
 {
     // TODO: Ihre Lösung hier
 
-    return nullptr;
+    // Neutrales, aber gültiges Ergebnis, damit das Testgerüst mit
+    // simulierter Eingabe nicht abstürzt, bevor die Lösung ergänzt ist.
+    return new int[2 * laenge_arr]{};
 }`,
     evalBody: `    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5 int a[] = {2, 6, 7, 8, 9, 2, 4, 5};
     int b[] = {3, 7, 6, 3, 5, 6, 8, 2};
@@ -380,7 +399,9 @@ vektor addVektor(const vektor *a, const vektor *b)
 
     // TODO: Ihre Lösung hier
 
-    return nullptr;
+    // Neutrales, aber gültiges Ergebnis, damit das Testgerüst mit
+    // simulierter Eingabe nicht abstürzt, bevor die Lösung ergänzt ist.
+    return new int[laenge_arr + 2]{};
 }`,
     evalBody: `    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 int a[] = {2, 6, 7, 8, 9, 2, 4, 5};
     a[i1] = i2;
@@ -470,7 +491,9 @@ using namespace std;
 
 int main() {
     int a[5][5] = { { 1,2,3,4,5 }, {2,7,5,3,4}, {5,4,3,2,1}, {7,7,7,7,7}, {3,6,3,6,3} };
-    int b[5];
+    // Initialisierung verhindert eine Ausgabe unbestimmter Werte, solange
+    // der TODO-Block noch nicht bearbeitet wurde.
+    int b[5] = {};
     // **********************************
     // *** Ende der Programmvorgaben ****
     // Schreiben Sie hier Ihren Code
@@ -802,6 +825,17 @@ int main()
       ["10 0", "10"],
       ["10 0.01", "11.0462"],
       ["10 0.1", "25.9374"],
+    ],
+  },
+  {
+    id: "maxpos",
+    title: "Position des größten Arraywerts",
+    lead: `<p class="lead">Schreiben Sie eine Funktion <code>int maxpos(int * arr, int len)</code>, die die Position des größten Werts im übergebenen Integer-Array zurückgibt. Erster Befehl der Funktion muss <code>printf("%s\\n", __func__);</code> sein.</p>`,
+    extra: note(`<code>maxpos({4,1,2,8,9,1}, 6)</code> &rarr; <code>4</code>, da <code>9</code> an Position 4 steht.`),
+    examples: [
+      ["0", "maxpos 4"],
+      ["3", "maxpos 1"],
+      ["5", "maxpos 2"],
     ],
   },
 ];

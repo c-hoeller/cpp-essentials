@@ -268,5 +268,11 @@
     "group": "Übungen",
     "title": "Zinseszins über 10 Jahre",
     "file": "45_zinsen.html"
+  },
+  {
+    "id": "maxpos",
+    "group": "Übungen",
+    "title": "Position des größten Arraywerts",
+    "file": "46_maxpos.html"
   }
 ]

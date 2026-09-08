@@ -19,3 +19,14 @@ node scripts/build_uebungen.mjs && node scripts/build_lerninhalte.mjs
 ```
 
 `build_uebungen.mjs` enthält je Übung Aufgabentext, Beispiele und Titel als Daten sowie den Pfad zur Quelle; die eigentliche Lösung wird beim Ausführen frisch aus der `.cpp`-Datei gelesen.
+
+## Vorlagen lokal prüfen
+
+Der Smoke-Test kompiliert jede herunterladbare Vorlage mit Address- und
+Undefined-Behavior-Sanitizern und führt ihr Testgerüst mit simuliertem
+Standardeingabe-Text aus. Die TODOs bleiben dabei absichtlich ungelöst; es
+wird die sichere Ausführung der Vorlage geprüft.
+
+```sh
+scripts/test_templates.sh
+```
