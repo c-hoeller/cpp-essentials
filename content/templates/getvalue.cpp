@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include <iostream>
+
+void showInteractiveInputHint()
+{
+    std::cerr << "Testeingabe eingeben (siehe README oder Beispiele), dann Enter: " << std::flush;
+}
+
 using namespace std;
 
 int get_value(const int * arr, int pos)
@@ -13,6 +19,7 @@ int get_value(const int * arr, int pos)
 
 int main()
 {
+    showInteractiveInputHint();
     int pos;
     int a [] = {5,7,32,5,7,3,5,7};
     cin >> pos;

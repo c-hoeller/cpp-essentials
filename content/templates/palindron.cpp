@@ -2,6 +2,12 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+
+void showInteractiveInputHint()
+{
+    std::cerr << "Testeingabe eingeben (siehe README oder Beispiele), dann Enter: " << std::flush;
+}
+
 using namespace std;
 
 // Nur für diese Übung benötigte eval.h-Makros, direkt eingebunden, damit
@@ -25,6 +31,7 @@ void eval()
 
 int main()
 {
+    showInteractiveInputHint();
     eval();
     return 0;
 }

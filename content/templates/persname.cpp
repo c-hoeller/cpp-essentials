@@ -1,6 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+
+void showInteractiveInputHint()
+{
+    std::cerr << "Testeingabe eingeben (siehe README oder Beispiele), dann Enter: " << std::flush;
+}
+
 using namespace std;
 
 struct pers
@@ -16,6 +22,7 @@ void eval(pers * p)
 
 int main()
 {
+    showInteractiveInputHint();
     // TODO: Ihre Lösung hier (Variable vom Typ pers anlegen, Vor-/Nachname einlesen, eval(&variable) aufrufen)
 
     return 0;

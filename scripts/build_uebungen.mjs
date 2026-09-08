@@ -10,6 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { deflateRawSync } from "node:zlib";
 
 const rootDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const contentDirectory = path.join(rootDirectory, "content");
@@ -68,6 +69,90 @@ function note(html) {
   return '<div class="note"><strong>Beispiel:</strong> ' + html + "</div>";
 }
 
+function crc32(data) {
+  let value = 0xffffffff;
+  for (const byte of data) {
+    value ^= byte;
+    for (let bit = 0; bit < 8; bit++) {
+      value = (value >>> 1) ^ (0xedb88320 & -(value & 1));
+    }
+  }
+  return (value ^ 0xffffffff) >>> 0;
+}
+
+function dosDateTime(date) {
+  const year = Math.max(date.getFullYear(), 1980) - 1980;
+  return {
+    date: (year << 9) | ((date.getMonth() + 1) << 5) | date.getDate(),
+    time: (date.getHours() << 11) | (date.getMinutes() << 5) | Math.floor(date.getSeconds() / 2),
+  };
+}
+
+// Kleiner ZIP-Schreiber ohne externe Abhängigkeit. Die Pakete bleiben dadurch
+// bei jeder Generierung reproduzierbar aus den aktuellen Vorlagen erzeugbar.
+function createZip(entries) {
+  const localParts = [];
+  const centralParts = [];
+  let offset = 0;
+  const timestamp = dosDateTime(new Date());
+
+  for (const entry of entries) {
+    const filename = Buffer.from(entry.name, "utf8");
+    const content = Buffer.from(entry.content, "utf8");
+    const compressed = deflateRawSync(content);
+    const checksum = crc32(content);
+
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(20, 4);
+    local.writeUInt16LE(0x0800, 6); // UTF-8-Dateinamen
+    local.writeUInt16LE(8, 8); // Deflate
+    local.writeUInt16LE(timestamp.time, 10);
+    local.writeUInt16LE(timestamp.date, 12);
+    local.writeUInt32LE(checksum, 14);
+    local.writeUInt32LE(compressed.length, 18);
+    local.writeUInt32LE(content.length, 22);
+    local.writeUInt16LE(filename.length, 26);
+    local.writeUInt16LE(0, 28);
+    localParts.push(local, filename, compressed);
+
+    const central = Buffer.alloc(46);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE((3 << 8) | 20, 4); // erstellt unter Unix, ZIP 2.0
+    central.writeUInt16LE(20, 6);
+    central.writeUInt16LE(0x0800, 8);
+    central.writeUInt16LE(8, 10);
+    central.writeUInt16LE(timestamp.time, 12);
+    central.writeUInt16LE(timestamp.date, 14);
+    central.writeUInt32LE(checksum, 16);
+    central.writeUInt32LE(compressed.length, 20);
+    central.writeUInt32LE(content.length, 24);
+    central.writeUInt16LE(filename.length, 28);
+    central.writeUInt16LE(0, 30);
+    central.writeUInt16LE(0, 32);
+    central.writeUInt16LE(0, 34);
+    central.writeUInt16LE(0, 36);
+    central.writeUInt32LE((entry.mode ?? 0o100644) * 0x10000, 38);
+    central.writeUInt32LE(offset, 42);
+    centralParts.push(central, filename);
+
+    offset += local.length + filename.length + compressed.length;
+  }
+
+  const centralDirectory = Buffer.concat(centralParts);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(0, 4);
+  end.writeUInt16LE(0, 6);
+  end.writeUInt16LE(entries.length, 8);
+  end.writeUInt16LE(entries.length, 10);
+  end.writeUInt32LE(centralDirectory.length, 12);
+  end.writeUInt32LE(offset, 16);
+  end.writeUInt16LE(0, 20);
+
+  return Buffer.concat([...localParts, centralDirectory, end]);
+}
+
 // Entfernt die repetitiven AKAD-Arbeitsanweisungen aus den Lösungsdateien
 // (reine Bedienhinweise fürs Bearbeiten/Einreichen), ohne den eigentlichen
 // Code (Funktionen, eval()-Testkabelage, Programmlogik) zu verändern.
@@ -110,10 +195,21 @@ const EVAL_MACROS = {
   _AKAD_INS2: "string s2; std::getline(cin, s2);",
 };
 
+// Die Vorlagen werden lokal in CMD/Terminal ausgeführt. Damit nicht der
+// Eindruck eines hängenden Programms entsteht, steht der Eingabehinweis auf
+// stderr; stdout bleibt ausschließlich für die Ergebnis-Ausgabe reserviert.
+const INTERACTIVE_INPUT_SUPPORT = `
+void showInteractiveInputHint()
+{
+    std::cerr << "Testeingabe eingeben (siehe README oder Beispiele), dann Enter: " << std::flush;
+}
+`;
+
 function harnessTemplate({ macros, body, evalBody, extraHeaders = [] }) {
   const defines = macros.map((m) => `#define ${m} ${EVAL_MACROS[m]}`).join("\n");
   const headers = ["#include <iostream>", "#include <cstdlib>", "#include <string>", ...extraHeaders];
   return `${headers.join("\n")}
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 // Nur für diese Übung benötigte eval.h-Makros, direkt eingebunden, damit
@@ -130,6 +226,7 @@ ${evalBody}
 
 int main()
 {
+    showInteractiveInputHint();
     eval();
     return 0;
 }
@@ -137,10 +234,13 @@ int main()
 }
 
 const DEFAULT_TEMPLATE = `#include <iostream>
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 int main()
 {
+    showInteractiveInputHint();
+
     // TODO: Aufgabe lösen (siehe Aufgabenstellung)
 
     return 0;
@@ -413,6 +513,7 @@ vektor addVektor(const vektor *a, const vektor *b)
 
   getvalue: `#include <stdio.h>
 #include <iostream>
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 int get_value(const int * arr, int pos)
@@ -426,6 +527,7 @@ int get_value(const int * arr, int pos)
 
 int main()
 {
+    showInteractiveInputHint();
     int pos;
     int a [] = {5,7,32,5,7,3,5,7};
     cin >> pos;
@@ -437,6 +539,7 @@ int main()
   persname: `#include <iostream>
 #include <cstdlib>
 #include <string>
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 struct pers
@@ -452,6 +555,7 @@ void eval(pers * p)
 
 int main()
 {
+    showInteractiveInputHint();
     // TODO: Ihre Lösung hier (Variable vom Typ pers anlegen, Vor-/Nachname einlesen, eval(&variable) aufrufen)
 
     return 0;
@@ -460,6 +564,7 @@ int main()
 
   ausgabe: `#include <iostream>
 #include <cstdio>
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 void ausgabe(const int *p)
@@ -471,6 +576,7 @@ void ausgabe(const int *p)
 
 int main()
 {
+    showInteractiveInputHint();
     int arr[20];
 
     for (int i = 0; i < 20; i++)
@@ -487,9 +593,11 @@ int main()
 
   matrixaddition: `#include <iostream>
 #include <cstdlib>
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 int main() {
+    showInteractiveInputHint();
     int a[5][5] = { { 1,2,3,4,5 }, {2,7,5,3,4}, {5,4,3,2,1}, {7,7,7,7,7}, {3,6,3,6,3} };
     // Initialisierung verhindert eine Ausgabe unbestimmter Werte, solange
     // der TODO-Block noch nicht bearbeitet wurde.
@@ -514,10 +622,12 @@ int main() {
 
   sincos: `#include <iostream>
 #include <cmath>
+${INTERACTIVE_INPUT_SUPPORT}
 using namespace std;
 
 int main()
 {
+    showInteractiveInputHint();
     double number;
     cin >> number;
 
@@ -530,6 +640,121 @@ int main()
 
 function templateFor(ex) {
   return TEMPLATES[ex.id] || ex.extraVorgabe || DEFAULT_TEMPLATE;
+}
+
+// Eine sofort nutzbare Testeingabe pro Übung. Sie steht sowohl im
+// Starterpaket als auch im lokalen Smoke-Test zur Verfügung.
+const STARTER_INPUTS = {
+  allegleich: "10 1 1 2 1",
+  arraysumme: "0",
+  asciicode: "66",
+  ausgabe: "1 2 -1",
+  copydistinct: "15 20 21 22 23",
+  enthaeltzahl: "2",
+  getvalue: "4",
+  grossbuchstaben: "Hildegunst Mythenmetz",
+  istquadratzahl: "9",
+  kaufrund: "1.145",
+  kiste: "1 2 3 1 2 3",
+  matrixaddition: "1 2",
+  matrixwert: "2 2",
+  maxpos: "0",
+  median: "1 3 2",
+  mehrzeilig: "Gregory.Peck",
+  mischen: "0 2 0 3 3",
+  mitarbeiter: "Gregory\nPeck\n5",
+  palindron: "hannah",
+  persname: "Max Mustermann",
+  potenz: "2 5",
+  qsumme: "5",
+  restsubtraktion: "5 7",
+  reversefind: "15 4",
+  sekunden: "45",
+  sincos: "0.0",
+  swap: "2 5",
+  uhrzeitminus: "12:34 20",
+  vektoraddition: "4 2 3 1 2",
+  vergroessern: "1 2 4 5",
+  zinsen: "10 0",
+};
+
+function starterReadme(ex) {
+  return `# ${ex.title}
+
+Du musst nur die Stelle mit \`TODO\` in \`${ex.id}.cpp\` implementieren.
+Alle Datenstrukturen, Ein-/Ausgabe und das Testgerüst sind bereits enthalten.
+
+## Starten
+
+Windows: \`start.bat\` doppelklicken.
+
+macOS/Linux: In einem Terminal in diesem Ordner \`bash start.sh\` ausführen.
+
+Beide Skripte benötigen einen C++-Compiler (\`g++\` bzw. \`c++\`).
+
+## Testeingabe
+
+Beim Start fordert das Programm eine Testeingabe an. Diese Eingabe funktioniert
+direkt mit dem enthaltenen Testgerüst:
+
+\`\`\`text
+${STARTER_INPUTS[ex.id]}
+\`\`\`
+
+Die vollständige Aufgabenbeschreibung steht in \`Aufgabe.md\`.
+`;
+}
+
+function windowsStartScript(ex) {
+  return `@echo off
+setlocal
+cd /d "%~dp0"
+
+where g++ >nul 2>nul
+if errorlevel 1 (
+  echo Fehler: Kein g++-Compiler gefunden.
+  echo Installiere z. B. MSYS2/MinGW-w64 oder starte die Vorlage in einer C++-IDE.
+  pause
+  exit /b 1
+)
+
+g++ -std=c++20 -Wall -Wextra -Wpedantic "${ex.id}.cpp" -o "${ex.id}.exe"
+if errorlevel 1 (
+  echo.
+  echo Kompilierung fehlgeschlagen. Pruefe den TODO-Block in ${ex.id}.cpp.
+  pause
+  exit /b 1
+)
+
+echo.
+"${ex.id}.exe"
+echo.
+pause
+`;
+}
+
+function unixStartScript(ex) {
+  return `#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+
+compiler="\${CXX:-c++}"
+"$compiler" -std=c++20 -Wall -Wextra -Wpedantic "${ex.id}.cpp" -o "${ex.id}"
+echo
+"./${ex.id}"
+`;
+}
+
+function starterPackageEntries(ex) {
+  const directory = ex.id + "/";
+  const taskPath = path.join(SOURCE_ROOT, ex.id, ex.id + ".md");
+  return [
+    { name: directory + ex.id + ".cpp", content: templateFor(ex) },
+    { name: directory + "start.bat", content: windowsStartScript(ex) },
+    { name: directory + "start.sh", content: unixStartScript(ex), mode: 0o100755 },
+    { name: directory + "README.md", content: starterReadme(ex) },
+    { name: directory + "Aufgabe.md", content: fs.readFileSync(taskPath, "utf8") },
+  ];
 }
 
 const EXERCISES = [
@@ -841,15 +1066,18 @@ int main()
 ];
 
 function downloadBlock(ex) {
-  const filename = ex.id + ".cpp";
+  const sourceFilename = ex.id + ".cpp";
+  const packageFilename = ex.id + "-starterpaket.zip";
   return (
-    '<div class="template-download"><a class="download-btn" href="content/templates/' +
-    filename +
+    '<div class="template-download"><a class="download-btn" href="content/starterpacks/' +
+    packageFilename +
     '" download="' +
-    filename +
-    '">⬇ Übungsvorlage herunterladen (' +
-    filename +
-    ")</a><p class=\"download-hint\">Selbst lösen, bevor Sie unten die Lösung ansehen &ndash; die Vorlage kompiliert eigenständig (inkl. Testgerüst, falls vorhanden).</p></div>"
+    packageFilename +
+    '">⬇ Starterpaket herunterladen (ZIP)</a><a class="download-source-link" href="content/templates/' +
+    sourceFilename +
+    '" download="' +
+    sourceFilename +
+    '">Nur die C++-Datei</a><p class="download-hint">ZIP entpacken und <code>start.bat</code> (Windows) oder <code>start.sh</code> (macOS/Linux) starten. Bearbeitet werden muss nur der TODO-Block.</p></div>'
   );
 }
 
@@ -880,13 +1108,19 @@ function buildFragment(ex) {
 
 // --- Content-Fragmente + Übungsvorlagen schreiben ---
 const templatesDirectory = path.join(contentDirectory, "templates");
+const starterpacksDirectory = path.join(contentDirectory, "starterpacks");
 fs.mkdirSync(templatesDirectory, { recursive: true });
+fs.mkdirSync(starterpacksDirectory, { recursive: true });
 
 const manifestEntries = EXERCISES.map((ex, index) => {
   const order = String(START_ORDER + index).padStart(2, "0");
   const filename = order + "_" + ex.id + ".html";
   fs.writeFileSync(path.join(contentDirectory, filename), buildFragment(ex), "utf8");
   fs.writeFileSync(path.join(templatesDirectory, ex.id + ".cpp"), templateFor(ex), "utf8");
+  fs.writeFileSync(
+    path.join(starterpacksDirectory, ex.id + "-starterpaket.zip"),
+    createZip(starterPackageEntries(ex))
+  );
   return { id: ex.id, group: GROUP, title: ex.title, file: filename };
 });
 
@@ -896,4 +1130,4 @@ const withoutOldExercises = manifest.filter((entry) => entry.group !== GROUP);
 const newManifest = withoutOldExercises.concat(manifestEntries);
 fs.writeFileSync(manifestPath, JSON.stringify(newManifest, null, 2) + "\n", "utf8");
 
-console.log("Erstellt: " + manifestEntries.length + " Übungs-Fragmente + manifest.json aktualisiert");
+console.log("Erstellt: " + manifestEntries.length + " Übungs-Fragmente, Starterpakete + manifest.json aktualisiert");

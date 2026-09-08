@@ -1,5 +1,11 @@
 #include <iostream>
 #include <cstdio>
+
+void showInteractiveInputHint()
+{
+    std::cerr << "Testeingabe eingeben (siehe README oder Beispiele), dann Enter: " << std::flush;
+}
+
 using namespace std;
 
 void ausgabe(const int *p)
@@ -11,6 +17,7 @@ void ausgabe(const int *p)
 
 int main()
 {
+    showInteractiveInputHint();
     int arr[20];
 
     for (int i = 0; i < 20; i++)

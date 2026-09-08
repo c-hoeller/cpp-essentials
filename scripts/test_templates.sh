@@ -59,7 +59,10 @@ for template in "$templates_dir"/*.cpp; do
   fi
 
   "$compiler" "${compile_flags[@]}" "$template" -o "$build_dir/$name"
-  printf '%s\n' "$input" | "$build_dir/$name" >/dev/null
+  if ! printf '%s\n' "$input" | "$build_dir/$name" >/dev/null 2>"$build_dir/$name.stderr"; then
+    cat "$build_dir/$name.stderr" >&2
+    exit 1
+  fi
   ((++count))
 done
 

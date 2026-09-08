@@ -1,8 +1,15 @@
 #include <iostream>
 #include <cstdlib>
+
+void showInteractiveInputHint()
+{
+    std::cerr << "Testeingabe eingeben (siehe README oder Beispiele), dann Enter: " << std::flush;
+}
+
 using namespace std;
 
 int main() {
+    showInteractiveInputHint();
     int a[5][5] = { { 1,2,3,4,5 }, {2,7,5,3,4}, {5,4,3,2,1}, {7,7,7,7,7}, {3,6,3,6,3} };
     // Initialisierung verhindert eine Ausgabe unbestimmter Werte, solange
     // der TODO-Block noch nicht bearbeitet wurde.
