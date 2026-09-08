@@ -68,16 +68,6 @@ function note(html) {
   return '<div class="note"><strong>Beispiel:</strong> ' + html + "</div>";
 }
 
-function cheatSheet(items) {
-  const rows = items
-    .map(
-      ([concept, explanation]) =>
-        "<li><code>" + escapeHtml(concept) + "</code> &ndash; " + escapeHtml(explanation) + "</li>"
-    )
-    .join("");
-  return '<section class="exercise-cheatsheet"><h4>Mini-Cheat-Sheet</h4><ul>' + rows + "</ul></section>";
-}
-
 // Entfernt die repetitiven AKAD-Arbeitsanweisungen aus den Lösungsdateien
 // (reine Bedienhinweise fürs Bearbeiten/Einreichen), ohne den eigentlichen
 // Code (Funktionen, eval()-Testkabelage, Programmlogik) zu verändern.
@@ -391,161 +381,6 @@ int main()
   },
 ];
 
-const CHEAT_SHEETS = {
-  allegleich: [
-    ["int* / Array", "Ein Array wird als Zeiger auf sein erstes Element übergeben; Zugriff mit arr[i]."],
-    ["for", "Ab Index 1 alle Elemente mit dem ersten Wert vergleichen."],
-    ["bool / return", "Bei einer Abweichung sofort false, nach erfolgreicher Schleife true zurückgeben."],
-  ],
-  arraysumme: [
-    ["int arr[10]", "Festes C-Array mit zehn Elementen deklarieren."],
-    ["for", "Einmal zum Befüllen, einmal zum Aufsummieren verwenden."],
-    ["+=", "summe += arr[i] ist die Kurzform für summe = summe + arr[i]."],
-  ],
-  asciicode: [
-    ["static_cast<char>", "Wandelt einen Integer lesbar in das Zeichen mit diesem Zeichencode um."],
-    ["std::cin / std::cout", "Eine Zahl einlesen und das umgewandelte Zeichen ausgeben."],
-  ],
-  ausgabe: [
-    ["const int*", "Ein lesender Zeigerparameter darf die Arraywerte nicht verändern."],
-    ["Sentinel -1", "Die Schleife endet, sobald der Markierungswert -1 erreicht wird."],
-    ["printf / __func__", "__func__ liefert innerhalb einer Funktion ihren aktuellen Namen."],
-  ],
-  copydistinct: [
-    ["Verschachtelte for-Schleifen", "Für jeden Quellwert die bereits kopierten Zielwerte durchsuchen."],
-    ["bool-Flag", "bereitsVorhanden merkt, ob ein Duplikat entdeckt wurde."],
-    ["dest[count]", "Nur neue Werte lückenlos schreiben und anschließend count erhöhen."],
-  ],
-  enthaeltzahl: [
-    ["const char*", "C-Strings werden als Zeiger auf nullterminierte Zeichen übergeben."],
-    ["std::strlen", "Liefert die Zeichenanzahl eines C-Strings; Header <cstring> nötig."],
-    ["'0' bis '9'", "Ein Zeichen ist eine Ziffer, wenn es in diesem Zeichenbereich liegt."],
-  ],
-  getvalue: [
-    ["const int*", "Ein Zeiger kann ein Array lesen, ohne dessen Inhalte zu verändern."],
-    ["arr[pos]", "Array- und Zeigerindexierung sind äquivalent zu *(arr + pos)."],
-  ],
-  grossbuchstaben: [
-    ["std::string::length", "Liefert die Anzahl der Zeichen im String."],
-    ["str[i]", "Greift auf das Zeichen an Index i zu."],
-    ["'A' <= c <= 'Z'", "In C++ als zwei Vergleiche mit && schreiben, um Großbuchstaben zu erkennen."],
-  ],
-  istquadratzahl: [
-    ["for", "Kandidaten ab 1 aufsteigend ausprobieren."],
-    ["i * i", "Das Quadrat eines ganzzahligen Kandidaten berechnen."],
-    ["bool", "Bei einem Treffer true, nach der Schleife false zurückgeben."],
-  ],
-  kaufrund: [
-    ["Skalieren", "Für zwei Nachkommastellen zuerst mit 1000 multiplizieren."],
-    ["/ und %", "Ganzzahldivision trennt Stellen, % 10 liefert die dritte Nachkommastelle."],
-    ["100.0", "Eine Fließkomma-Division stellt das gerundete Ergebnis wieder her."],
-  ],
-  kiste: [
-    ["Ganzzahldivision", "kiste / schachtel liefert die Anzahl ganzer Schachteln pro Richtung."],
-    ["Produkt", "Die drei Anzahlen pro Dimension miteinander multiplizieren."],
-  ],
-  matrixaddition: [
-    ["int a[5][5]", "Zweidimensionales Array: erster Index Zeile, zweiter Index Spalte."],
-    ["a[2][i] + a[i][3]", "Feste Zeile und feste Spalte komponentenweise addieren."],
-    ["for", "Alle fünf Positionen des Ergebnisvektors b durchlaufen."],
-  ],
-  matrixwert: [
-    ["2D-Array", "arr[zeile][spalte] greift auf einen Matrixwert zu."],
-    ["Bereichsprüfung", "Vor dem Zugriff Zeile und Spalte gegen ihre unteren und oberen Grenzen prüfen."],
-    ["||", "ODER: Eine ungültige Zeile oder eine ungültige Spalte genügt für -1."],
-  ],
-  median: [
-    ["std::min / std::max", "Mit Initializer-Liste aus <algorithm> kleinsten und größten Wert bestimmen."],
-    ["Initializer-Liste", "{x, y, z} fasst die drei Werte für min und max zusammen."],
-    ["Summe - Extremwerte", "Bei drei verschiedenen Zahlen bleibt genau der mittlere Wert übrig."],
-  ],
-  mehrzeilig: [
-    ["std::string::size_type", "Passender, vorzeichenloser Indextyp für Stringlängen."],
-    ["std::string::length", "Bestimmt die Schleifengrenze."],
-    ["char-Vergleich", "Nach dem Zeichen '.' direkt einen Zeilenumbruch ausgeben."],
-  ],
-  mischen: [
-    ["new[]", "Ein dynamisches Ergebnisarray mit doppelter Länge anlegen."],
-    ["Zeiger-Rückgabe", "Die Adresse des neuen Arrays zurückgeben; der Aufrufer nutzt später delete[]."],
-    ["Cursor", "Ein separater Zielindex macht das abwechselnde Einfügen einfach."],
-  ],
-  mitarbeiter: [
-    ["class", "Attribute sind ohne public standardmäßig privat."],
-    ["static", "nummerManager gehört der Klasse und wird von allen Objekten geteilt."],
-    ["Konstruktor", "Initialisiert beim Erzeugen Personalnummer sowie Vor- und Nachname."],
-  ],
-  palindron: [
-    ["std::strlen", "Liefert die Länge eines C-Strings ohne das abschließende '\\0'."],
-    ["Zwei Indizes", "Einen von vorne, einen von hinten bewegen und Zeichen vergleichen."],
-    ["length / 2", "Nur die erste Hälfte prüfen; die zweite wäre spiegelbildlich doppelt."],
-  ],
-  persname: [
-    ["struct", "Fasst Vor- und Nachname zu einem eigenen Datentyp zusammen."],
-    [".", "Greift bei einem Objekt auf ein Feld zu, etwa p.vname."],
-    ["-> und &", "eval(&p) übergibt die Adresse; im Zeigerparameter liest p->nname das Feld."],
-  ],
-  potenz: [
-    ["double", "Speichert die Gleitpunktbasis und das Zwischenergebnis."],
-    ["result = 1", "Neutrales Element der Multiplikation; danach n-mal mit x multiplizieren."],
-    ["for", "Jede Iteration erzeugt genau eine auszugebende Zwischenpotenz."],
-  ],
-  qsumme: [
-    ["while", "Solange die Zahl größer als 0 ist, ihre letzte Ziffer verarbeiten."],
-    ["% 10", "Liefert die letzte Dezimalziffer."],
-    ["/ 10", "Entfernt bei int-Division die letzte Dezimalziffer."],
-  ],
-  restsubtraktion: [
-    ["while (a >= b)", "Wiederholen, bis der Rest kleiner als der Divisor ist."],
-    ["-=", "Kurzform für a = a - b; nach jeder Subtraktion den Zwischenwert ausgeben."],
-    ["Modulo-Idee", "Der verbleibende Wert entspricht a % b für positive Eingaben."],
-  ],
-  reversefind: [
-    ["long[]", "Ein Arrayparameter wird intern als Zeiger behandelt."],
-    ["lastseen = -1", "-1 ist ein sinnvoller Startwert für nicht gefunden."],
-    ["Kein break", "Bei jedem Treffer Index überschreiben, damit das letzte Vorkommen erhalten bleibt."],
-  ],
-  sekunden: [
-    ["/ 3600", "Ganzzahlige Division liefert volle Stunden."],
-    ["Rest berechnen", "Nach Stunden und Minuten den bereits verwendeten Anteil abziehen."],
-    ["/ 60", "Aus dem Stundenrest volle Minuten bestimmen."],
-  ],
-  sincos: [
-    ["<cmath>", "Stellt die mathematischen Funktionen bereit."],
-    ["std::sin / std::cos", "Berechnen Sinus und Cosinus eines Winkels im Bogenmaß."],
-    ["double", "Passender Gleitpunkttyp für mathematische Funktionen."],
-  ],
-  swap: [
-    ["int*", "Zeigerparameter erlauben, die Variablen des Aufrufers zu verändern."],
-    ["*a", "Dereferenzierung: Zugriff auf den Wert an der gespeicherten Adresse."],
-    ["Temporäre Variable", "Zwischenspeichern verhindert, dass ein Wert beim Überschreiben verloren geht."],
-  ],
-  uhrzeitminus: [
-    ["std::string::substr", "Schneidet Stunden und Minuten aus dem Format hh:mm heraus."],
-    ["std::stoi", "Wandelt den Teilstring in einen int um; Header <string> nötig."],
-    ["% 60", "Liefert die Minuten innerhalb einer Stunde; führende Null mit if ergänzen."],
-  ],
-  vektoraddition: [
-    ["struct", "Definiert den eigenen Datentyp vektor mit x, y und z."],
-    ["const vektor*", "Liest beide Eingabevektoren über Zeiger, ohne sie zu verändern."],
-    ["{...}", "Listeninitialisierung erzeugt den Ergebnisvektor aus drei Komponenten."],
-  ],
-  vergroessern: [
-    ["new[]", "Reserviert ein neues Array mit laenge_arr + 2 Elementen."],
-    ["Kopierschleife", "Die ursprünglichen Werte mit result[i] = arr[i] übernehmen."],
-    ["delete[]", "Dynamische Arrays müssen beim Aufrufer mit delete[] freigegeben werden."],
-  ],
-  zinsen: [
-    ["double", "Geldbetrag und Zinssatz als Gleitkommazahlen speichern."],
-    ["for", "Die Verzinsung genau zehnmal anwenden."],
-    ["betrag *= (1 + zinssatz)", "Zinseszins: Das Ergebnis eines Jahres ist die Basis des nächsten."],
-  ],
-  maxpos: [
-    ["arr[0]", "Mit dem ersten Wert und dessen Index als bisheriges Maximum starten."],
-    ["for ab 1", "Die restlichen Elemente mit dem bisherigen Maximum vergleichen."],
-    [">", "Nur bei einem echt größeren Wert Index und Maximum aktualisieren."],
-  ],
-};
-
 function buildFragment(ex) {
   let html = ex.lead;
 
@@ -555,11 +390,6 @@ function buildFragment(ex) {
   if (ex.leadAfterDiagram) {
     html += ex.leadAfterDiagram;
   }
-  const cheatsheet = CHEAT_SHEETS[ex.id];
-  if (!cheatsheet) {
-    throw new Error("Kein Mini-Cheat-Sheet für Übung: " + ex.id);
-  }
-  html += cheatSheet(cheatsheet);
   if (ex.extraVorgabe) {
     html += "<h4>Vorgabe</h4>" + codeBlock({ label: "C++ (Vorgabe)", lang: "cpp", code: ex.extraVorgabe });
   }
