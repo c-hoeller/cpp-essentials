@@ -1,0 +1,26 @@
+<p class="lead">Templates (nur C++) erlauben generischen Code, der mit verschiedenen Datentypen funktioniert, ohne ihn mehrfach zu schreiben.</p><h4>Funktionstemplate</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-43">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-43" class="language-cpp">template &lt;typename T&gt;
+T maximum(T a, T b) {
+    return (a &gt; b) ? a : b;
+}
+
+cout &lt;&lt; maximum(3, 7) &lt;&lt; endl;       // T = int    -&gt; 7
+cout &lt;&lt; maximum(3.5, 2.1) &lt;&lt; endl;   // T = double -&gt; 3.5</code></pre></div><h4>Klassentemplate</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-44">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-44" class="language-cpp">template &lt;typename T&gt;
+class Box {
+private:
+    T inhalt;
+public:
+    Box(T wert) : inhalt(wert) {}
+    T getInhalt() const { return inhalt; }
+};
+
+Box&lt;int&gt; b1(42);
+Box&lt;string&gt; b2("Hallo");</code></pre></div><h4>std::vector (STL)</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-45">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-45" class="language-cpp">#include &lt;vector&gt;
+
+vector&lt;int&gt; zahlen = {1, 2, 3};
+zahlen.push_back(4);          // am Ende anhaengen -&gt; {1,2,3,4}
+cout &lt;&lt; zahlen.size() &lt;&lt; endl; // 4
+cout &lt;&lt; zahlen[1] &lt;&lt; endl;     // 2 (Index-Zugriff wie beim Array)
+
+for (int n : zahlen) {         // range-based for (C++11)
+    cout &lt;&lt; n &lt;&lt; " ";
+}</code></pre></div><p><code>vector</code> ist ein dynamisches Array, das automatisch wächst – im Gegensatz zu C-Arrays muss die Größe nicht im Voraus feststehen.</p>

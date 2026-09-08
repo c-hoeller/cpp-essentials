@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ueberblick",
+    "group": "Grundlagen",
+    "title": "Überblick: C vs. C++",
+    "file": "01_ueberblick.html"
+  },
+  {
+    "id": "io",
+    "group": "Grundlagen",
+    "title": "Programmstruktur & Ein-/Ausgabe",
+    "file": "02_io.html"
+  },
+  {
+    "id": "datentypen",
+    "group": "Grundlagen",
+    "title": "Datentypen & Variablen",
+    "file": "03_datentypen.html"
+  },
+  {
+    "id": "operatoren",
+    "group": "Grundlagen",
+    "title": "Operatoren",
+    "file": "04_operatoren.html"
+  },
+  {
+    "id": "kontrollstrukturen",
+    "group": "Grundlagen",
+    "title": "Kontrollstrukturen",
+    "file": "05_kontrollstrukturen.html"
+  },
+  {
+    "id": "funktionen",
+    "group": "Funktionen & Speicher",
+    "title": "Funktionen",
+    "file": "06_funktionen.html"
+  },
+  {
+    "id": "arrays-strings",
+    "group": "Funktionen & Speicher",
+    "title": "Arrays & Strings",
+    "file": "07_arrays-strings.html"
+  },
+  {
+    "id": "zeiger",
+    "group": "Funktionen & Speicher",
+    "title": "Zeiger (Pointer)",
+    "file": "08_zeiger.html"
+  },
+  {
+    "id": "speicher",
+    "group": "Funktionen & Speicher",
+    "title": "Dynamische Speicherverwaltung",
+    "file": "09_speicher.html"
+  },
+  {
+    "id": "structs",
+    "group": "Funktionen & Speicher",
+    "title": "Structs, Enums, Unions & typedef",
+    "file": "10_structs.html"
+  },
+  {
+    "id": "klassen",
+    "group": "C++ OOP",
+    "title": "Klassen & Objekte",
+    "file": "11_klassen.html"
+  },
+  {
+    "id": "vererbung",
+    "group": "C++ OOP",
+    "title": "Vererbung & Polymorphie",
+    "file": "12_vererbung.html"
+  },
+  {
+    "id": "templates-stl",
+    "group": "Fortgeschritten",
+    "title": "Templates & STL-Grundlagen",
+    "file": "13_templates-stl.html"
+  },
+  {
+    "id": "exceptions",
+    "group": "Fortgeschritten",
+    "title": "Exception Handling",
+    "file": "14_exceptions.html"
+  },
+  {
+    "id": "praeprozessor",
+    "group": "Fortgeschritten",
+    "title": "Präprozessor & Gültigkeitsbereiche",
+    "file": "15_praeprozessor.html"
+  }
+]

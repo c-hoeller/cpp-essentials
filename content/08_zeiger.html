@@ -1,0 +1,150 @@
+<p class="lead">
+  Ein Zeiger speichert die Adresse einer Variablen. Zeiger sind das zentrale,
+  oft klausurrelevante Thema in C.
+</p>
+<div class="code-block">
+  <div class="code-block-header">
+    <span>C / C++</span
+    ><button class="copy-btn" type="button" data-copy-target="code-25">
+      Kopieren
+    </button>
+  </div>
+  <pre
+    class="line-numbers language-cpp"
+  ><code id="code-25" class="language-cpp">int x = 10;
+int *p = &amp;x;      // p zeigt auf die Adresse von x (&amp; = Adressoperator)
+
+printf("%d\n", *p);   // Dereferenzierung: Wert an der Adresse -&gt; 10
+printf("%p\n", (void*)p); // Adresse selbst
+
+*p = 20;               // aendert den Wert von x ueber den Zeiger
+printf("%d\n", x);     // 20</code></pre>
+</div>
+<h4>Zeiger und Arrays</h4>
+<div class="code-block">
+  <div class="code-block-header">
+    <span>C / C++</span
+    ><button class="copy-btn" type="button" data-copy-target="code-26">
+      Kopieren
+    </button>
+  </div>
+  <pre
+    class="line-numbers language-cpp"
+  ><code id="code-26" class="language-cpp">int arr[3] = {1, 2, 3};
+int *p = arr;          // Array-Name zerfaellt zu Zeiger auf 1. Element
+printf("%d\n", *p);        // 1  (gleich arr[0])
+printf("%d\n", *(p + 1));  // 2  (gleich arr[1])
+printf("%d\n", p[2]);      // 3  (Zeiger koennen wie Arrays indiziert werden)</code></pre>
+</div>
+<h4>Zeiger auf Zeiger & NULL</h4>
+<div class="code-block">
+  <div class="code-block-header">
+    <span>C / C++</span
+    ><button class="copy-btn" type="button" data-copy-target="code-27">
+      Kopieren
+    </button>
+  </div>
+  <pre
+    class="line-numbers language-cpp"
+  ><code id="code-27" class="language-cpp">int x = 5;
+int *p = &amp;x;
+int **pp = &amp;p;         // Zeiger auf Zeiger
+printf("%d\n", **pp);  // 5
+
+int *leer = NULL;      // zeigt auf nichts (C++: nullptr bevorzugt)
+if (leer != NULL) { /* sicher dereferenzieren */ }</code></pre>
+</div>
+<div class="warn">
+  Das Dereferenzieren eines NULL-/uninitialisierten Zeigers (<code>*p</code>
+  ohne gültige Adresse) ist undefiniertes Verhalten und ein klassischer
+  Absturzgrund – vor dem Zugriff immer prüfen.
+</div>
+<div class="note">
+  Zeigerarithmetik rechnet in "Elementen", nicht in Byte: <code>p + 1</code> bei
+  einem <code>int*</code> springt <code>sizeof(int)</code> Byte weiter.
+</div>
+<h4>const bei Zeigern</h4>
+<p>
+  <code>const</code> kann sich bei einem Zeiger auf zwei völlig unterschiedliche
+  Dinge beziehen: auf den <strong>Wert</strong>, auf den gezeigt wird, oder auf
+  den <strong>Zeiger selbst</strong> (also die gespeicherte Adresse). Beides
+  zusammen ist ebenfalls möglich. Das ist einer der beliebtesten
+  Klausur-Stolpersteine.
+</p>
+<div class="code-block">
+  <div class="code-block-header">
+    <span>C / C++</span
+    ><button class="copy-btn" type="button" data-copy-target="code-28">
+      Kopieren
+    </button>
+  </div>
+  <pre
+    class="line-numbers language-cpp"
+  ><code id="code-28" class="language-cpp">int x = 10, y = 20;
+
+// 1) Zeiger auf konstanten Wert - der Wert ist ueber p1 nicht aenderbar
+const int *p1 = &amp;x;      // gleichbedeutend mit: int const *p1 = &amp;x;
+// *p1 = 5;              // FEHLER: Wert nicht ueber p1 aenderbar
+p1 = &amp;y;                 // OK: p1 darf auf etwas anderes zeigen
+
+// 2) konstanter Zeiger - der Zeiger selbst ist fixiert, der Wert aenderbar
+int * const p2 = &amp;x;
+*p2 = 5;                 // OK: Wert darf geaendert werden
+// p2 = &amp;y;              // FEHLER: p2 darf nicht mehr umgebogen werden
+
+// 3) konstanter Zeiger auf konstanten Wert - beides fixiert
+const int * const p3 = &amp;x;
+// *p3 = 5;              // FEHLER
+// p3 = &amp;y;              // FEHLER</code></pre>
+</div>
+<table class="cmp">
+  <tr>
+    <th>Deklaration</th>
+    <th>Wert änderbar?</th>
+    <th>Zeiger umbiegbar?</th>
+  </tr>
+  <tr>
+    <td><code>const int *p</code></td>
+    <td>Nein</td>
+    <td>Ja</td>
+  </tr>
+  <tr>
+    <td><code>int * const p</code></td>
+    <td>Ja</td>
+    <td>Nein (muss bei Deklaration initialisiert werden)</td>
+  </tr>
+  <tr>
+    <td><code>const int * const p</code></td>
+    <td>Nein</td>
+    <td>Nein</td>
+  </tr>
+</table>
+<div class="note">
+  <strong>Lesehilfe:</strong> Lies die Deklaration vom Variablennamen ausgehend
+  nach links. Bei <code>const int * const p3</code>: "p3 ist ein
+  <em>const</em> Zeiger auf ein <em>const</em> int". Faustregel:
+  <code>const</code> bezieht sich immer auf das, was unmittelbar links davon
+  steht – steht ganz links nichts (const also am Zeilenanfang), bezieht es sich
+  auf das, was rechts folgt. Deshalb sind <code>const int *p</code> und
+  <code>int const *p</code> identisch.
+</div>
+<p>
+  In der Praxis begegnet einem <code>const</code> vor allem bei
+  Funktionsparametern: Ein Zeiger auf <code>const</code> signalisiert dem
+  Aufrufer, dass die Funktion die übergebenen Daten nur liest, nie verändert.
+</p>
+<div class="code-block">
+  <div class="code-block-header">
+    <span>C++</span
+    ><button class="copy-btn" type="button" data-copy-target="code-29">
+      Kopieren
+    </button>
+  </div>
+  <pre
+    class="line-numbers language-cpp"
+  ><code id="code-29" class="language-cpp">void ausgeben(const int *p) {
+    cout &lt;&lt; *p &lt;&lt; endl;   // Lesen ist erlaubt
+    // *p = 99;           // FEHLER: Schreiben ist verboten
+}
+// nuetzlich z.B. bei Strings: void ausgeben(const char *text);</code></pre>
+</div>

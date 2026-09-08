@@ -1,0 +1,20 @@
+<p class="lead">Speicher, dessen Größe erst zur Laufzeit bekannt ist, wird auf dem Heap angelegt.</p><h4>C: malloc / calloc / realloc / free</h4><div class="code-block"><div class="code-block-header"><span>C</span><button class="copy-btn" type="button" data-copy-target="code-30">Kopieren</button></div><pre class="line-numbers language-c"><code id="code-30" class="language-c">#include &lt;stdlib.h&gt;
+
+int n = 5;
+int *arr = (int*) malloc(n * sizeof(int));  // n ints, uninitialisiert
+if (arr == NULL) {
+    // Speicher konnte nicht reserviert werden
+    return 1;
+}
+for (int i = 0; i &lt; n; i++) arr[i] = i;
+
+int *arr2 = (int*) calloc(n, sizeof(int));  // wie malloc, aber mit 0 initialisiert
+arr = realloc(arr, 10 * sizeof(int));       // Groesse aendern
+
+free(arr);
+free(arr2);</code></pre></div><h4>C++: new / delete</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-31">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-31" class="language-cpp">int *p = new int(42);     // einzelner int, initialisiert mit 42
+delete p;
+
+int *arr = new int[5];    // Array von 5 ints
+arr[0] = 1;
+delete[] arr;             // Array-Form von delete!</code></pre></div><div class="warn"><strong>Speicherlecks:</strong> Jedes <code>malloc</code>/<code>new</code> braucht ein passendes <code>free</code>/<code>delete</code>. Wird das vergessen, bleibt der Speicher bis Programmende belegt (Memory Leak). Für Arrays mit <code>new[]</code> muss zwingend <code>delete[]</code> (nicht nur <code>delete</code>) verwendet werden.</div><table class="cmp"><tr><th></th><th>C</th><th>C++</th></tr><tr><td>Reservieren</td><td><code>malloc(n * sizeof(typ))</code></td><td><code>new typ[n]</code></td></tr><tr><td>Freigeben</td><td><code>free(p)</code></td><td><code>delete p;</code> bzw. <code>delete[] p;</code></td></tr><tr><td>Initialisierung</td><td>nein (außer calloc: Nullen)</td><td>ja, per Konstruktor/Initialisierer möglich</td></tr><tr><td>Typsicherheit</td><td>Cast von void* nötig</td><td>typsicher, kein Cast nötig</td></tr></table>

@@ -1,0 +1,18 @@
+<p class="lead">Structs fassen mehrere zusammengehörige Werte unter einem Namen zusammen.</p><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-32">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-32" class="language-cpp">typedef struct {
+    char name[20];
+    int alter;
+} Person;
+
+Person p = {"Anna", 30};
+printf("%s ist %d Jahre alt\n", p.name, p.alter);  // . bei normaler Variable
+
+Person *zeiger = &amp;p;
+printf("%d\n", zeiger-&gt;alter);   // -&gt; bei Zugriff ueber Zeiger (Kurzform fuer (*zeiger).alter)</code></pre></div><h4>enum</h4><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-33">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-33" class="language-cpp">enum Wochentag { MONTAG, DIENSTAG, MITTWOCH };  // MONTAG=0, DIENSTAG=1, MITTWOCH=2
+enum Wochentag heute = DIENSTAG;
+if (heute == DIENSTAG) printf("Dienstag!\n");</code></pre></div><h4>union (kurz)</h4><p>Eine <code>union</code> sieht syntaktisch wie ein struct aus, alle Member teilen sich aber denselben Speicherbereich – es ist immer nur ein Member zur gleichen Zeit gültig belegt. Wird selten klausurrelevant abgefragt, aber gut zu kennen.</p><div class="note">In C++ dürfen Structs (wie Klassen) auch Methoden und Konstruktoren haben – der einzige technische Unterschied zu <code>class</code> ist die Standard-Sichtbarkeit: bei <code>struct</code> <code>public</code>, bei <code>class</code> <code>private</code>.</div><h4>Standardwerte direkt im Struct/Klasse (nur C++)</h4><p>Seit C++11 dürfen Member direkt bei ihrer Deklaration einen Startwert bekommen – ganz ohne Konstruktor. Dieser Wert gilt, wenn beim Erzeugen des Objekts nichts anderes angegeben wird:</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-34">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-34" class="language-cpp">struct Zugangsdaten {
+    int passwort = 1234;   // Default-Wert, gilt ohne explizite Initialisierung
+    int versuche = 0;
+};
+
+Zugangsdaten z;             // passwort = 1234, versuche = 0
+Zugangsdaten z2{9999, 3};   // ueberschreibt beide Defaults</code></pre></div>

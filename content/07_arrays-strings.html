@@ -1,0 +1,29 @@
+<h4>Arrays</h4><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-21">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-21" class="language-cpp">int zahlen[5] = {10, 20, 30, 40, 50};
+printf("%d\n", zahlen[0]);   // 10 - Index beginnt bei 0
+zahlen[2] = 99;                // ueberschreibt 30
+
+int matrix[2][3] = { {1,2,3}, {4,5,6} };
+printf("%d\n", matrix[1][2]); // 6</code></pre></div><p>Mehrdimensionale Arrays durchläuft man typischerweise mit <strong>verschachtelten</strong> <code>for</code>-Schleifen – die äußere Schleife läuft über die Zeilen, die innere über die Spalten:</p><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-22">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-22" class="language-cpp">int matrix[2][3] = { {1,2,3}, {4,5,6} };
+
+for (int zeile = 0; zeile &lt; 2; zeile++) {
+    for (int spalte = 0; spalte &lt; 3; spalte++) {
+        printf("%d ", matrix[zeile][spalte]);
+    }
+    printf("\n");   // Zeilenumbruch nach jeder Zeile
+}</code></pre></div><div class="warn">C/C++ prüfen Array-Grenzen zur Laufzeit <strong>nicht</strong>. Ein Zugriff auf <code>zahlen[10]</code> bei einem 5er-Array ist undefiniertes Verhalten (kann abstürzen, falsche Werte liefern oder "zufällig" funktionieren) – nicht automatisch ein Fehler zur Compile-Zeit.</div><h4>C-Strings (char-Arrays)</h4><div class="code-block"><div class="code-block-header"><span>C</span><button class="copy-btn" type="button" data-copy-target="code-23">Kopieren</button></div><pre class="line-numbers language-c"><code id="code-23" class="language-c">#include &lt;string.h&gt;
+
+char name[20] = "Anna";        // endet automatisch mit '\0'
+printf("%s hat %lu Zeichen\n", name, strlen(name));
+
+char ziel[40];
+strcpy(ziel, name);            // kopieren
+strcat(ziel, " Schmidt");      // anhaengen
+if (strcmp(name, "Anna") == 0) // Vergleich (0 = gleich)
+    printf("Treffer\n");</code></pre></div><h4>C++ std::string</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-24">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-24" class="language-cpp">#include &lt;string&gt;
+using namespace std;
+
+string name = "Anna";
+string voll = name + " Schmidt";     // + statt strcat
+cout &lt;&lt; voll.length() &lt;&lt; endl;       // Laenge
+cout &lt;&lt; voll.substr(0, 4) &lt;&lt; endl;   // Teilstring "Anna"
+if (name == "Anna") cout &lt;&lt; "Treffer" &lt;&lt; endl;  // == statt strcmp</code></pre></div><table class="cmp"><tr><th></th><th>C (char[])</th><th>C++ (std::string)</th></tr><tr><td>Terminierung</td><td>manuelles <code>\0</code></td><td>automatisch verwaltet</td></tr><tr><td>Länge</td><td><code>strlen(s)</code></td><td><code>s.length()</code> / <code>s.size()</code></td></tr><tr><td>Verketten</td><td><code>strcat(a, b)</code></td><td><code>a + b</code></td></tr><tr><td>Vergleich</td><td><code>strcmp(a, b) == 0</code></td><td><code>a == b</code></td></tr></table><div class="note"><code>std::string</code> bietet mit <code>.compare(andererString)</code> eine Alternative zu <code>==</code>, die – wie <code>strcmp</code> in C – nicht nur 0 (gleich) liefert, sondern auch negative/positive Werte für die lexikografische Reihenfolge: <code>a.compare(b)</code> ist <code>0</code> bei Gleichheit, <code>&lt;0</code> wenn <code>a</code> alphabetisch vor <code>b</code> steht, sonst <code>&gt;0</code>.</div>

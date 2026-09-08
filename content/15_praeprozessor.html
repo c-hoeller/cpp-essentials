@@ -1,0 +1,17 @@
+<p class="lead">Der Präprozessor läuft vor dem eigentlichen Compilieren und ersetzt Text rein textuell.</p><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-47">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-47" class="language-cpp">#define PI 3.14159
+#define QUADRAT(x) ((x) * (x))   // Klammern um x und den Gesamtausdruck sind wichtig!
+
+double flaeche = PI * QUADRAT(5);   // wird zu: 3.14159 * ((5) * (5))
+
+#ifndef MEINHEADER_H     // Include Guard: verhindert Mehrfach-Einbindung
+#define MEINHEADER_H
+// Header-Inhalt
+#endif</code></pre></div><div class="warn">Ohne Klammern, z. B. <code>#define QUADRAT(x) x * x</code>, würde <code>QUADRAT(2 + 3)</code> textuell zu <code>2 + 3 * 2 + 3 = 11</code> statt der gewünschten 25 – ein klassischer Makro-Fallstrick.</div><h4>static & extern</h4><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-48">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-48" class="language-cpp">int zaehler() {
+    static int count = 0;   // wird nur EINMAL initialisiert, Wert bleibt zwischen Aufrufen erhalten
+    count++;
+    return count;
+}
+// zaehler() liefert nacheinander aufgerufen: 1, 2, 3, ...
+
+static int nurHierSichtbar = 5;  // static auf Dateiebene: nur in dieser .c/.cpp-Datei sichtbar
+extern int ausAndererDatei;      // Variable ist in einer anderen Datei definiert</code></pre></div><table class="cmp"><tr><th>Konstrukt</th><th>Bedeutung</th></tr><tr><td><code>static</code> in Funktion</td><td>Variable behält ihren Wert über mehrere Aufrufe hinweg</td></tr><tr><td><code>static</code> auf Dateiebene</td><td>Sichtbarkeit auf die aktuelle Datei beschränkt (interne Bindung)</td></tr><tr><td><code>extern</code></td><td>Verweist auf eine Definition in einer anderen Datei</td></tr><tr><td><code>const</code> vs. <code>#define</code></td><td><code>const</code> ist typsicher und vom Compiler geprüft, <code>#define</code> ist reiner Textersatz ohne Typprüfung</td></tr></table>

@@ -1,0 +1,46 @@
+<p class="lead">Eine Funktion braucht Rückgabetyp, Namen und Parameterliste. In C müssen Funktionen vor ihrer Verwendung deklariert (Prototyp) oder definiert sein.</p><div class="code-block"><div class="code-block-header"><span>C</span><button class="copy-btn" type="button" data-copy-target="code-14">Kopieren</button></div><pre class="line-numbers language-c"><code id="code-14" class="language-c">// Prototyp (Deklaration) – meist im Header oder oben in der Datei
+int quadrat(int x);
+
+int main(void) {
+    printf("%d\n", quadrat(4));  // 16
+    return 0;
+}
+
+// Definition
+int quadrat(int x) {
+    return x * x;
+}</code></pre></div><p>Eine <strong>Deklaration</strong> (Prototyp) sagt dem Compiler nur, dass eine Funktion mit dieser Signatur existiert – die <strong>Definition</strong> enthält den tatsächlichen Funktionskörper. Eine vorherige Deklaration ist immer dann nötig, wenn eine Funktion aufgerufen wird, bevor ihre Definition im Code erscheint (z. B. wenn sich zwei Funktionen gegenseitig aufrufen).</p><h4>Call by Value, Call by Address & Call by Reference</h4><p>Es gibt drei Arten, Parameter zu übergeben: <strong>Call by Value</strong> (Standard, Kopie – Änderungen wirken sich nicht auf das Original aus), <strong>Call by Address</strong> (ein Zeiger wird übergeben – in C die klassische Methode, um ein Original zu verändern) und <strong>Call by Reference</strong> (nur C++, eine Referenz auf das Original).</p><div class="code-block"><div class="code-block-header"><span>C</span><button class="copy-btn" type="button" data-copy-target="code-15">Kopieren</button></div><pre class="line-numbers language-c"><code id="code-15" class="language-c">// Call by Address (C): Aenderung ueber Zeiger
+void swapC(int *a, int *b) {
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+// Aufruf: swapC(&amp;x, &amp;y);</code></pre></div><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-16">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-16" class="language-cpp">// Call by Reference (C++): Aenderung ueber Referenz (kein &amp; beim Aufruf noetig)
+void swapCpp(int &amp;a, int &amp;b) {
+    int tmp = a;
+    a = b;
+    b = tmp;
+}
+// Aufruf: swapCpp(x, y);</code></pre></div><h4>Nur C++: Default-Parameter & Überladung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-17">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-17" class="language-cpp">double potenz(double basis, int exponent = 2) { /* ... */ }
+potenz(3.0);      // exponent = 2 (Default)
+potenz(3.0, 3);   // exponent = 3
+
+// Ueberladung: gleicher Name, unterschiedliche Parameterliste (nur C++ moeglich)
+int addiere(int a, int b) { return a + b; }
+double addiere(double a, double b) { return a + b; }</code></pre></div><h4>Rekursion vs. Iteration</h4><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-18">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-18" class="language-cpp">int fakultaet(int n) {
+    if (n &lt;= 1) return 1;       // Abbruchbedingung
+    return n * fakultaet(n - 1); // rekursiver Aufruf
+}</code></pre></div><p>Fast jede Rekursion lässt sich auch iterativ (mit einer Schleife) lösen – hier dieselbe Funktion iterativ:</p><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-19">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-19" class="language-cpp">int fakultaetIterativ(int n) {
+    int ergebnis = 1;
+    for (int i = 2; i &lt;= n; i++) {
+        ergebnis *= i;
+    }
+    return ergebnis;
+}</code></pre></div><p>Ein zweites klassisches Rekursionsbeispiel: die Ziffern einer Zahl einzeln ausgeben.</p><div class="code-block"><div class="code-block-header"><span>C / C++</span><button class="copy-btn" type="button" data-copy-target="code-20">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-20" class="language-cpp">void zeigeZiffern(int n) {
+    if (n &lt; 10) {
+        printf("%d\n", n);   // letzte Ziffer erreicht: Abbruchbedingung
+        return;
+    }
+    zeigeZiffern(n / 10);     // erst alle vorherigen Ziffern ausgeben
+    printf("%d\n", n % 10);  // dann die aktuelle letzte Ziffer
+}</code></pre></div><table class="cmp"><tr><th></th><th>Iteration</th><th>Rekursion</th></tr><tr><td>Geschwindigkeit / Speicher</td><td>meist schneller, kein zusätzlicher Stack-Verbrauch</td><td>jeder Aufruf braucht einen neuen Stack-Frame – bei sehr vielen Aufrufen droht ein Stack Overflow</td></tr><tr><td>Lesbarkeit</td><td>kann bei komplexer Logik unübersichtlich werden</td><td>oft kürzer und näher an der mathematischen Definition</td></tr><tr><td>Typischer Einsatz</td><td>einfache Zähl-/Summierschleifen</td><td>Probleme, die sich natürlich in kleinere gleichartige Teilprobleme zerlegen lassen (z. B. Bäume, Backtracking)</td></tr></table>

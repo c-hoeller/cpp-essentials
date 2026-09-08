@@ -1,0 +1,17 @@
+<p class="lead">C++ bietet mit try/catch/throw strukturierte Fehlerbehandlung. In reinem C gibt es keine Exceptions – Fehler werden über Rückgabewerte oder <code>errno</code> signalisiert.</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-46">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-46" class="language-cpp">#include &lt;stdexcept&gt;
+
+double teile(double a, double b) {
+    if (b == 0) {
+        throw runtime_error("Division durch Null!");
+    }
+    return a / b;
+}
+
+int main() {
+    try {
+        cout &lt;&lt; teile(10, 0) &lt;&lt; endl;
+    } catch (const runtime_error &amp;e) {
+        cout &lt;&lt; "Fehler: " &lt;&lt; e.what() &lt;&lt; endl;
+    }
+    cout &lt;&lt; "Programm laeuft weiter" &lt;&lt; endl;
+}</code></pre></div><p>Ablauf: <code>throw</code> wirft ein Ausnahmeobjekt, die Ausführung springt sofort zum passenden <code>catch</code>-Block (überspringt den Rest von <code>try</code>), danach läuft das Programm normal weiter. <code>e.what()</code> liefert bei Standard-Exceptions eine Fehlermeldung.</p><div class="note">Vergleich C: dieselbe Funktion würde in C typischerweise über einen Fehlercode (z. B. <code>-1</code>) oder ein zusätzliches Zeiger-Argument signalisieren, dass etwas schiefgelaufen ist – der Aufrufer muss den Rückgabewert manuell prüfen.</div>

@@ -1,0 +1,62 @@
+<p class="lead">Klassen (nur C++) bündeln Daten (Attribute) und Verhalten (Methoden) und regeln den Zugriff darauf.</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-35">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-35" class="language-cpp">class Konto {
+private:
+    double saldo;                 // von außen nicht direkt zugreifbar
+
+public:
+    Konto(double start) : saldo(start) {}   // Konstruktor mit Initialisierungsliste
+    ~Konto() {}                              // Destruktor (hier ohne Aufraeumarbeit)
+
+    void einzahlen(double betrag) {
+        saldo += betrag;
+    }
+
+    double getSaldo() const {     // const: Methode aendert das Objekt nicht
+        return saldo;
+    }
+};
+
+int main() {
+    Konto k(100.0);      // Konstruktor wird automatisch aufgerufen
+    k.einzahlen(50.0);
+    cout &lt;&lt; k.getSaldo() &lt;&lt; endl;   // 150
+}</code></pre></div><h4>Zugriffsmodifizierer</h4><table class="cmp"><tr><th>Modifizierer</th><th>Zugreifbar von …</th></tr><tr><td><code>private</code></td><td>nur innerhalb derselben Klasse</td></tr><tr><td><code>protected</code></td><td>Klasse selbst + abgeleitete Klassen</td></tr><tr><td><code>public</code></td><td>von überall</td></tr></table><p><code>class</code> ist standardmäßig <code>private</code>, <code>struct</code> standardmäßig <code>public</code> – das ist der einzige Kernunterschied zwischen beiden in C++.</p><div class="note"><strong>Getter/Setter-Prinzip:</strong> Attribute werden meist <code>private</code> gehalten und nur über öffentliche Methoden wie <code>getSaldo()</code> (Getter, lesen) und ggf. <code>setSaldo(...)</code> (Setter, schreiben) zugänglich gemacht. Das schafft eine klar definierte Schnittstelle: die Klasse kann ihre interne Umsetzung später ändern, ohne dass Code außerhalb angepasst werden muss.</div><h4>this-Zeiger & statische Member</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-36">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-36" class="language-cpp">class Zaehler {
+private:
+    int wert;
+public:
+    static int anzahlObjekte;   // gehoert der Klasse, nicht einem Objekt
+
+    Zaehler() {
+        wert = 0;
+        anzahlObjekte++;        // this-&gt;anzahlObjekte waere ungueltig (static!)
+    }
+    void setWert(int wert) {
+        this-&gt;wert = wert;      // this unterscheidet Member von Parameter mit gleichem Namen
+    }
+};
+int Zaehler::anzahlObjekte = 0;   // Definition ausserhalb der Klasse noetig</code></pre></div><h4>Objekte erzeugen: Stack vs. Heap</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-37">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-37" class="language-cpp">Konto k1(100.0);                // auf dem Stack: Konstruktor direkt aufgerufen
+k1.einzahlen(50.0);             // Zugriff mit Punkt .
+// k1 wird automatisch zerstoert, sobald der Gueltigkeitsbereich endet
+
+Konto* k2 = new Konto(100.0);   // auf dem Heap: new liefert einen Zeiger
+k2-&gt;einzahlen(50.0);            // Zugriff mit Pfeil -&gt; (Kurzform fuer (*k2).einzahlen(...))
+delete k2;                      // muss manuell freigegeben werden!
+k2 = nullptr;                   // guter Stil: Zeiger nach delete ungueltig machen</code></pre></div><div class="note">Stack-Objekte räumen sich automatisch auf, sobald ihr Gültigkeitsbereich endet. Heap-Objekte (per <code>new</code> erzeugt) leben weiter, bis sie explizit mit <code>delete</code> freigegeben werden – sonst entsteht ein Speicherleck (siehe Abschnitt "Dynamische Speicherverwaltung").</div><h4>Deklaration und Implementierung trennen (Header + .cpp)</h4><p>In größeren Projekten wird eine Klasse meist auf zwei Dateien aufgeteilt: Die <strong>Header-Datei</strong> (<code>.h</code>) enthält nur die Klassendeklaration (Attribute, Methodenköpfe), die <strong>Implementierungsdatei</strong> (<code>.cpp</code>) enthält die tatsächlichen Methodenrümpfe. Der Scope-Resolution-Operator <code>::</code> (den man oben schon bei <code>Zaehler::anzahlObjekte</code> gesehen hat) verknüpft eine Methode wieder mit ihrer Klasse.</p><div class="code-block"><div class="code-block-header"><span>Konto.h</span><button class="copy-btn" type="button" data-copy-target="code-38">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-38" class="language-cpp">// Konto.h
+class Konto {
+private:
+    double saldo;
+public:
+    Konto(double start);
+    void einzahlen(double betrag);
+    double getSaldo() const;
+};</code></pre></div><div class="code-block"><div class="code-block-header"><span>Konto.cpp</span><button class="copy-btn" type="button" data-copy-target="code-39">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-39" class="language-cpp">// Konto.cpp
+#include "Konto.h"
+
+Konto::Konto(double start) : saldo(start) {}
+
+void Konto::einzahlen(double betrag) {
+    saldo += betrag;
+}
+
+double Konto::getSaldo() const {
+    return saldo;
+}</code></pre></div>

@@ -1,0 +1,52 @@
+<p class="lead">Eine abgeleitete Klasse erbt Attribute und Methoden einer Basisklasse und kann sie erweitern oder überschreiben.</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-40">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-40" class="language-cpp">class Tier {
+public:
+    virtual void sagHallo() const {
+        cout &lt;&lt; "Ich bin ein Tier" &lt;&lt; endl;
+    }
+    virtual ~Tier() {}   // virtueller Destruktor: wichtig bei Vererbung + delete ueber Basisklassenzeiger
+};
+
+class Hund : public Tier {     // : public Basisklasse
+public:
+    void sagHallo() const override {  // override: ueberschreibt die Basisversion
+        cout &lt;&lt; "Wuff!" &lt;&lt; endl;
+    }
+};
+
+int main() {
+    Tier* t = new Hund();
+    t-&gt;sagHallo();     // "Wuff!" – dank virtual wird die Hund-Version aufgerufen
+    delete t;
+}</code></pre></div><div class="warn">Ohne <code>virtual</code> in der Basisklasse würde <code>t-&gt;sagHallo()</code> trotz eines Hund-Objekts die <em>Tier</em>-Version aufrufen (statische statt dynamische Bindung) – ein häufiger Klausur-Stolperstein.</div><h4>Abstrakte Klassen</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-41">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-41" class="language-cpp">class Form {
+public:
+    virtual double flaeche() const = 0;   // rein virtuell -&gt; Form ist abstrakt
+};
+// Form f;           // FEHLER: abstrakte Klassen koennen nicht instanziiert werden
+
+class Kreis : public Form {
+private:
+    double radius;
+public:
+    Kreis(double r) : radius(r) {}
+    double flaeche() const override { return 3.14159 * radius * radius; }
+};</code></pre></div><h4>Basisklassenkonstruktor aufrufen</h4><p>Hat die Basisklasse einen Konstruktor mit Parametern, muss die abgeleitete Klasse ihn explizit in ihrer eigenen Initialisierungsliste aufrufen, bevor sie ihre eigenen Attribute initialisiert:</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-42">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-42" class="language-cpp">class Ball {
+protected:
+    double v0;      // Abschussgeschwindigkeit
+    double beta;    // Abschusswinkel
+public:
+    Ball(double v0, double beta) : v0(v0), beta(beta) {}
+    virtual void flugbahn() const { cout &lt;&lt; "einfache Flugbahn" &lt;&lt; endl; }
+};
+
+class Golfball : public Ball {
+private:
+    int anzahlDimples;
+public:
+    // Basisklassen-Konstruktor wird explizit in der Initialisierungsliste aufgerufen:
+    Golfball(double v0, double beta, int dimples)
+        : Ball(v0, beta), anzahlDimples(dimples) {}
+
+    void flugbahn() const override {
+        cout &lt;&lt; "Flugbahn mit " &lt;&lt; anzahlDimples &lt;&lt; " Dimples" &lt;&lt; endl;
+    }
+};</code></pre></div><h4>UML-Klassendiagramm (Kurznotation)</h4><p>Klassen werden oft als Kästen mit drei Bereichen dargestellt: Klassenname, Attribute, Methoden. Die Symbole davor zeigen die Sichtbarkeit: <code>-</code> = private, <code>#</code> = protected, <code>+</code> = public. Ein Pfeil mit <strong>hohler Pfeilspitze</strong> von der abgeleiteten zur Basisklasse zeigt Vererbung – hier für die Klassen von oben:</p><div style="margin:14px 0 18px;text-align:center;"><svg viewBox="0 0 300 260" style="width:100%;max-width:300px;height:auto;color:var(--text);" role="img" aria-label="UML-Klassendiagramm: Golfball erbt von Ball"><rect x="60" y="10" width="180" height="88" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="60" y1="38" x2="240" y2="38" stroke="currentColor" stroke-width="1.5"/><line x1="60" y1="66" x2="240" y2="66" stroke="currentColor" stroke-width="1.5"/><text x="150" y="28" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">Ball</text><text x="68" y="52" font-size="11" fill="currentColor" font-family="monospace">- v0, beta : double</text><text x="68" y="80" font-size="11" fill="currentColor" font-family="monospace">+ flugbahn()</text><line x1="150" y1="150" x2="150" y2="114" stroke="currentColor" stroke-width="1.5"/><polygon points="150,98 138,114 162,114" fill="var(--bg-elevated)" stroke="currentColor" stroke-width="1.5"/><rect x="40" y="150" width="220" height="100" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="40" y1="178" x2="260" y2="178" stroke="currentColor" stroke-width="1.5"/><line x1="40" y1="206" x2="260" y2="206" stroke="currentColor" stroke-width="1.5"/><text x="150" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">Golfball</text><text x="48" y="192" font-size="11" fill="currentColor" font-family="monospace">- anzahlDimples : int</text><text x="48" y="220" font-size="11" fill="currentColor" font-family="monospace">+ flugbahn()</text></svg></div><p>Das Diagramm entspricht genau dem Code von oben: <code>Ball</code> als Basisklasse, <code>Golfball</code> als abgeleitete Klasse mit eigenem Attribut und überschriebener Methode.</p>
