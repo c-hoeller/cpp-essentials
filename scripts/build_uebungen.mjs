@@ -142,24 +142,6 @@ const EXERCISES = [
     id: "getvalue",
     title: "Array-Element per Zeiger lesen",
     lead: `<p class="lead">Schreiben Sie eine Funktion <code>int get_value(const int * arr, int pos)</code>, die den Wert des übergebenen Arrays an Position <code>pos</code> zurückgibt. Erster Befehl der Funktion muss <code>printf("%s\\n", __func__);</code> sein.</p>`,
-    extraVorgabe: `#include <stdio.h>
-#include <iostream>
-using namespace std;
-
-int get_value (const int * arr, int pos){
-  printf("%s\\n", __func__);
-
-  return arr[pos-1];
-}
-
-int main()
-{
-   int pos;
-   int a [] = {5,7,32,5,7,3,5,7};
-   cin >> pos;
-   cout << get_value (a,pos) << endl;
-   return 0;
-}`,
     examples: [
       ["4", "get_value 7"],
       ["2", "get_value 32"],
