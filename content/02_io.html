@@ -30,7 +30,7 @@ int sekunden = 8;
 if (minuten &lt; 10) std::cout &lt;&lt; '0';
 std::cout &lt;&lt; minuten &lt;&lt; ":";
 if (sekunden &lt; 10) std::cout &lt;&lt; '0';
-std::cout &lt;&lt; sekunden &lt;&lt; std::endl;  // 09:08</code></pre></div><div class="note">Hier wird vor jedem einstelligen Wert zuerst das Zeichen <code>'0'</code> ausgegeben. So brauchst du weder <code>&lt;iomanip&gt;</code> noch <code>setw</code>/<code>setfill</code>.</div><h4>Alternative: String-Verkettung</h4><p>Du kannst die formatierte Zeit zuerst als <code>std::string</code> zusammensetzen und anschließend ausgeben. <code>std::to_string</code> wandelt dabei die Zahlen in Text um.</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-5">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-5" class="language-cpp">#include &lt;string&gt;
+std::cout &lt;&lt; sekunden &lt;&lt; std::endl;  // 09:08</code></pre></div><h4>Alternative: String-Verkettung</h4><p>Du kannst die formatierte Zeit zuerst als <code>std::string</code> zusammensetzen und anschließend ausgeben. <code>std::to_string</code> wandelt dabei die Zahlen in Text um.</p><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-5">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-5" class="language-cpp">#include &lt;string&gt;
 
 int minuten = 9;
 int sekunden = 8;
