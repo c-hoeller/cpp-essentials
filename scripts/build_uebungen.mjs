@@ -91,6 +91,424 @@ function readSolution(dir) {
   return cleanSolutionSource(fs.readFileSync(file, "utf8"));
 }
 
+// --- Übungsvorlagen (Downloads) ---
+//
+// Jede Vorlage ist bewusst eigenständig kompilierbar (kein separates eval.h
+// nötig): benötigte Test-Makros aus eval.h werden direkt in die Datei
+// übernommen. Die eigentliche Lösung wird durch einen TODO-Platzhalter
+// ersetzt, das eval()-Testgerüst (falls vorhanden) bleibt vollständig und
+// unverändert erhalten, damit direkt gegen die Beispiele getestet werden kann.
+
+const EVAL_MACROS = {
+  _AKAD_INI1: "int i1; std::cin >> i1;",
+  _AKAD_INI2: "int i2; std::cin >> i2;",
+  _AKAD_INI3: "int i3; std::cin >> i3;",
+  _AKAD_INI4: "int i4; std::cin >> i4;",
+  _AKAD_INI5: "int i5; std::cin >> i5;",
+  _AKAD_IND1: "double d1; std::cin >> d1;",
+  _AKAD_INS1: "string s1; std::getline(cin, s1);",
+  _AKAD_INS2: "string s2; std::getline(cin, s2);",
+};
+
+function harnessTemplate({ macros, body, evalBody, extraHeaders = [] }) {
+  const defines = macros.map((m) => `#define ${m} ${EVAL_MACROS[m]}`).join("\n");
+  const headers = ["#include <iostream>", "#include <cstdlib>", "#include <string>", ...extraHeaders];
+  return `${headers.join("\n")}
+using namespace std;
+
+// Nur für diese Übung benötigte eval.h-Makros, direkt eingebunden, damit
+// diese Datei allein (ohne separate eval.h) kompiliert:
+${defines}
+
+${body.trim()}
+
+// Die Methode eval darf nicht verändert werden
+void eval()
+{
+${evalBody}
+}
+
+int main()
+{
+    eval();
+    return 0;
+}
+`;
+}
+
+const DEFAULT_TEMPLATE = `#include <iostream>
+using namespace std;
+
+int main()
+{
+    // TODO: Aufgabe lösen (siehe Aufgabenstellung)
+
+    return 0;
+}
+`;
+
+const TEMPLATES = {
+  allegleich: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2", "_AKAD_INI3", "_AKAD_INI4", "_AKAD_INI5"],
+    body: `bool allegleich(int* arr, int anzahl)
+{
+    printf("-%s-\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return false;
+}`,
+    evalBody: `    int a1[20] = { 1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2 };
+    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5
+     a1[i2] = i3; a1[i4] = i5;
+    cout << (allegleich(a1, i1) ? "G" : "N") << endl;`,
+  }),
+
+  copydistinct: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2", "_AKAD_INI3", "_AKAD_INI4", "_AKAD_INI5"],
+    body: `int copyDistinct(int *source, int *dest, int anzahl)
+{
+    // TODO: Ihre Lösung hier
+
+    return 0;
+}`,
+    evalBody: `    int a1[20];
+    int a2[20];
+    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5 for (int i = 0; i < i1; i++)
+        a1[i] = i;
+    a1[3] = i2;
+    a1[5] = i3;
+    a1[7] = i4;
+    a1[9] = i5;
+
+    cout << copyDistinct(a1, a2, i1) << endl;
+    cout << a2[3] << a1[3] << a2[4] << a2[5] << endl;`,
+  }),
+
+  enthaeltzahl: harnessTemplate({
+    macros: ["_AKAD_INS1"],
+    extraHeaders: ["#include <cstring>"],
+    body: `bool enthaelt_zahl(const char * str)
+{
+    printf("-%s-\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return false;
+}`,
+    evalBody: `    _AKAD_INS1 cout << (enthaelt_zahl(s1.c_str()) ? "E" : "N");`,
+  }),
+
+  grossbuchstaben: harnessTemplate({
+    macros: ["_AKAD_INS1"],
+    body: `int anzahlGrossbuchstaben(const string &str)
+{
+    // TODO: Ihre Lösung hier
+
+    return 0;
+}`,
+    evalBody: `    _AKAD_INS1 cout << "eval:" << ((anzahlGrossbuchstaben(s1) == 0) ? 'N' : anzahlGrossbuchstaben(s1));`,
+  }),
+
+  istquadratzahl: harnessTemplate({
+    macros: ["_AKAD_INI1"],
+    body: `bool istQuadratzahl(int n)
+{
+    printf("%s\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return false;
+}`,
+    evalBody: `    _AKAD_INI1
+    cout << (istQuadratzahl(i1) ? "T" : "F") << endl;`,
+  }),
+
+  kaufrund: harnessTemplate({
+    macros: ["_AKAD_IND1"],
+    body: `double kaufrund(double number)
+{
+    printf("-%s-\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return 0.0;
+}`,
+    evalBody: `    _AKAD_IND1 cout << kaufrund(d1) << endl;`,
+  }),
+
+  mehrzeilig: harnessTemplate({
+    macros: ["_AKAD_INS1"],
+    body: `void ausgabeMehrzeilig(const string &str)
+{
+    // TODO: Ihre Lösung hier
+}`,
+    evalBody: `    _AKAD_INS1 ausgabeMehrzeilig(s1);`,
+  }),
+
+  mischen: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2", "_AKAD_INI3", "_AKAD_INI4", "_AKAD_INI5"],
+    body: `int *mischen(int *arr1, int *arr2, int laenge_arr)
+{
+    // TODO: Ihre Lösung hier
+
+    return nullptr;
+}`,
+    evalBody: `    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5 int a[] = {2, 6, 7, 8, 9, 2, 4, 5};
+    int b[] = {3, 7, 6, 3, 5, 6, 8, 2};
+    a[i1] = i2;
+    b[i3] = i4;
+    int *c = mischen(a, b, i5);
+    for (int i = 0; i < 2 * i5; i++)
+        cout << c[i];
+    cout << endl;
+    delete[] c;`,
+  }),
+
+  mitarbeiter: harnessTemplate({
+    macros: ["_AKAD_INS1", "_AKAD_INS2", "_AKAD_INI1"],
+    body: `class Mitarbeiter
+{
+    static int nummerManager;
+    int pnr;
+    string vorname;
+    string nachname;
+
+public:
+    Mitarbeiter(string vname, string nname)
+    {
+        // TODO: Ihre Lösung hier (nummerManager erhöhen, pnr setzen, vorname/nachname übernehmen)
+    }
+
+public:
+    int getPnr()
+    {
+        // TODO: Ihre Lösung hier
+        return 0;
+    }
+};
+
+int Mitarbeiter::nummerManager = 100;`,
+    evalBody: `    _AKAD_INS1 _AKAD_INS2 _AKAD_INI1 for (int i = 0; i < i1; i++)
+    {
+        Mitarbeiter *m = new Mitarbeiter(s1, s2);
+        delete m;
+    }
+    Mitarbeiter m(s1, s2);
+    cout << m.getPnr() << endl;`,
+  }),
+
+  palindron: harnessTemplate({
+    macros: ["_AKAD_INS1"],
+    extraHeaders: ["#include <cstring>"],
+    body: `bool ist_palindron(const char *str)
+{
+    printf("-%s-\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return false;
+}`,
+    evalBody: `    _AKAD_INS1 cout << (ist_palindron(s1.c_str()) ? "P" : "K");`,
+  }),
+
+  qsumme: harnessTemplate({
+    macros: ["_AKAD_INI1"],
+    body: `int qsumme(int number)
+{
+    printf("%s\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return 0;
+}`,
+    evalBody: `    _AKAD_INI1
+    cout << qsumme(i1) << endl;`,
+  }),
+
+  reversefind: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2"],
+    body: `int reverseFind(long feld[], int len, long suchwert)
+{
+    printf("-%s-\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return -1;
+}`,
+    evalBody: `    _AKAD_INI1 _AKAD_INI2 long a[23] = {2, 6, 8, 9, 2, 4, 6, 8, 1, 2, 6, 3, 8, 6, 3, 6, 8, 9, 2, 3, 6, 2, 3};
+    cout << reverseFind(a, i1, i2);`,
+  }),
+
+  swap: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2"],
+    body: `void swap(int *a, int *b)
+{
+    // TODO: Ihre Lösung hier
+}`,
+    evalBody: `    _AKAD_INI1 _AKAD_INI2 swap(&i1, &i2);
+    cout << (i1 * 11 + i2 * 3) << endl;`,
+  }),
+
+  vektoraddition: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2", "_AKAD_INI3", "_AKAD_INI4", "_AKAD_INI5"],
+    body: `struct vektor
+{
+    int x;
+    int y;
+    int z;
+};
+
+vektor addVektor(const vektor *a, const vektor *b)
+{
+    // TODO: Ihre Lösung hier
+
+    return vektor{};
+}`,
+    evalBody: `    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5
+        vektor a{i1, i2, i3};
+    vektor b{i1, i4, i5};
+    vektor c = addVektor(&a, &b);
+    cout << c.x + c.y + c.z;`,
+  }),
+
+  vergroessern: harnessTemplate({
+    macros: ["_AKAD_INI1", "_AKAD_INI2", "_AKAD_INI3", "_AKAD_INI4"],
+    body: `int *vergroessern(int *arr, int laenge_arr)
+{
+    printf("%s%d\\n", __func__, arr[1]);
+
+    // TODO: Ihre Lösung hier
+
+    return nullptr;
+}`,
+    evalBody: `    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 int a[] = {2, 6, 7, 8, 9, 2, 4, 5};
+    a[i1] = i2;
+    int *c = vergroessern(a, i3);
+    cout << c[i4];
+    cout << endl;
+    delete[] c;`,
+  }),
+
+  getvalue: `#include <stdio.h>
+#include <iostream>
+using namespace std;
+
+int get_value(const int * arr, int pos)
+{
+    printf("%s\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+
+    return 0;
+}
+
+int main()
+{
+    int pos;
+    int a [] = {5,7,32,5,7,3,5,7};
+    cin >> pos;
+    cout << get_value (a,pos) << endl;
+    return 0;
+}
+`,
+
+  persname: `#include <iostream>
+#include <cstdlib>
+#include <string>
+using namespace std;
+
+struct pers
+{
+    string vname;
+    string nname;
+};
+
+void eval(pers * p)
+{
+   cout << __func__<< p->nname << p->vname;
+}
+
+int main()
+{
+    // TODO: Ihre Lösung hier (Variable vom Typ pers anlegen, Vor-/Nachname einlesen, eval(&variable) aufrufen)
+
+    return 0;
+}
+`,
+
+  ausgabe: `#include <iostream>
+#include <cstdio>
+using namespace std;
+
+void ausgabe(const int *p)
+{
+    printf("%s\\n", __func__);
+
+    // TODO: Ihre Lösung hier
+}
+
+int main()
+{
+    int arr[20];
+
+    for (int i = 0; i < 20; i++)
+    {
+        cin >> arr[i];
+        if (arr[i] == -1) break;
+    }
+
+    ausgabe(arr);
+
+    return 0;
+}
+`,
+
+  matrixaddition: `#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int main() {
+    int a[5][5] = { { 1,2,3,4,5 }, {2,7,5,3,4}, {5,4,3,2,1}, {7,7,7,7,7}, {3,6,3,6,3} };
+    int b[5];
+    // **********************************
+    // *** Ende der Programmvorgaben ****
+    // Schreiben Sie hier Ihren Code
+
+    // TODO: Ihre Lösung hier
+
+    // **********************************
+    // Der nachfolgende Code dient der Evaluation
+    // und darf nicht verändert werden.
+    int x1, x2;
+    cin >> x1; cin >> x2;
+    for (int i = x1; i <= x2; i++) {
+         cout << b[i] << endl;
+    }
+    return 0;
+}
+`,
+
+  sincos: `#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+    double number;
+    cin >> number;
+
+    // TODO: Sinus und Cosinus berechnen und ausgeben
+
+    return 0;
+}
+`,
+};
+
+function templateFor(ex) {
+  return TEMPLATES[ex.id] || ex.extraVorgabe || DEFAULT_TEMPLATE;
+}
+
 const EXERCISES = [
   {
     id: "allegleich",
@@ -388,6 +806,19 @@ int main()
   },
 ];
 
+function downloadBlock(ex) {
+  const filename = ex.id + ".cpp";
+  return (
+    '<div class="template-download"><a class="download-btn" href="content/templates/' +
+    filename +
+    '" download="' +
+    filename +
+    '">⬇ Übungsvorlage herunterladen (' +
+    filename +
+    ")</a><p class=\"download-hint\">Selbst lösen, bevor Sie unten die Lösung ansehen &ndash; die Vorlage kompiliert eigenständig (inkl. Testgerüst, falls vorhanden).</p></div>"
+  );
+}
+
 function buildFragment(ex) {
   let html = ex.lead;
 
@@ -407,16 +838,21 @@ function buildFragment(ex) {
     html += "<h4>Beispiele</h4>" + examplesTable(ex.examples);
   }
 
+  html += downloadBlock(ex);
   html += "<h4>Lösung</h4>" + codeBlock({ label: "C++", lang: "cpp", code: readSolution(ex.id) });
 
   return html;
 }
 
-// --- Content-Fragmente schreiben ---
+// --- Content-Fragmente + Übungsvorlagen schreiben ---
+const templatesDirectory = path.join(contentDirectory, "templates");
+fs.mkdirSync(templatesDirectory, { recursive: true });
+
 const manifestEntries = EXERCISES.map((ex, index) => {
   const order = String(START_ORDER + index).padStart(2, "0");
   const filename = order + "_" + ex.id + ".html";
   fs.writeFileSync(path.join(contentDirectory, filename), buildFragment(ex), "utf8");
+  fs.writeFileSync(path.join(templatesDirectory, ex.id + ".cpp"), templateFor(ex), "utf8");
   return { id: ex.id, group: GROUP, title: ex.title, file: filename };
 });
 
