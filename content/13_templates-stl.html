@@ -23,4 +23,12 @@ cout &lt;&lt; zahlen[1] &lt;&lt; endl;     // 2 (Index-Zugriff wie beim Array)
 
 for (int n : zahlen) {         // range-based for (C++11)
     cout &lt;&lt; n &lt;&lt; " ";
-}</code></pre></div><p><code>vector</code> ist ein dynamisches Array, das automatisch wächst – im Gegensatz zu C-Arrays muss die Größe nicht im Voraus feststehen.</p>
+}</code></pre></div><p><code>vector</code> ist ein dynamisches Array, das automatisch wächst – im Gegensatz zu C-Arrays muss die Größe nicht im Voraus feststehen.</p><h4>&lt;algorithm&gt;: std::min / std::max</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-86">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-86" class="language-cpp">#include &lt;algorithm&gt;
+
+int a = 5, b = 9, c = 2;
+cout &lt;&lt; min({a, b, c}) &lt;&lt; endl;   // 2 - kleinster Wert
+cout &lt;&lt; max({a, b, c}) &lt;&lt; endl;   // 9 - groesster Wert</code></pre></div><p><code>min</code>/<code>max</code> akzeptieren neben zwei einzelnen Werten auch eine Initializer-Liste <code>{...}</code> für beliebig viele Werte.</p><h4>&lt;cmath&gt;: mathematische Funktionen</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-87">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-87" class="language-cpp">#include &lt;cmath&gt;
+
+double winkel = 2.5;
+cout &lt;&lt; sin(winkel) &lt;&lt; endl;   // Sinus im Bogenmass
+cout &lt;&lt; cos(winkel) &lt;&lt; endl;   // Cosinus im Bogenmass</code></pre></div><p><code>&lt;cmath&gt;</code> stellt nach demselben Muster weitere Funktionen wie <code>sqrt</code>, <code>pow</code>, <code>abs</code>, <code>floor</code> und <code>ceil</code> bereit.</p>
