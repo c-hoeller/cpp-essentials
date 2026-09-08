@@ -19,26 +19,3 @@ node scripts/build_uebungen.mjs && node scripts/build_lerninhalte.mjs
 ```
 
 `build_uebungen.mjs` enthält je Übung Aufgabentext, Beispiele und Titel als Daten sowie den Pfad zur Quelle; die eigentliche Lösung wird beim Ausführen frisch aus der `.cpp`-Datei gelesen.
-
-Neben der einzelnen C++-Vorlage wird pro Übung ein ZIP-Starterpaket in
-`content/starterpacks/` erzeugt. Es enthält die Vorlage, die vollständige
-Aufgabenbeschreibung, eine Beispiel-Eingabe sowie `start.bat` für Windows und
-`start.sh` für macOS/Linux. Die Startskripte kompilieren und starten die
-Übung; bearbeitet wird ausschließlich der TODO-Block in der C++-Datei.
-
-## Vorlagen lokal prüfen
-
-Der Smoke-Test kompiliert jede herunterladbare Vorlage mit Address- und
-Undefined-Behavior-Sanitizern und führt ihr Testgerüst mit simuliertem
-Standardeingabe-Text aus. Die TODOs bleiben dabei absichtlich ungelöst; es
-wird die sichere Ausführung der Vorlage geprüft.
-
-```sh
-scripts/test_templates.sh
-```
-
-Die Starterpakete werden zusätzlich Ende-zu-Ende geprüft:
-
-```sh
-scripts/test_starterpacks.sh
-```

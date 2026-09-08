@@ -76,42 +76,6 @@
     });
   }
 
-  function setupTemplateDownloads() {
-    document.addEventListener("click", function (event) {
-      var link = event.target.closest(".download-btn");
-      if (!link) return;
-
-      var url = link.getAttribute("href");
-      var filename = link.getAttribute("download") || "vorlage.cpp";
-      if (!url || !window.fetch) return;
-
-      event.preventDefault();
-
-      fetch(url)
-        .then(function (response) {
-          if (!response.ok) throw new Error("HTTP " + response.status);
-          return response.blob();
-        })
-        .then(function (blob) {
-          var blobUrl = URL.createObjectURL(blob);
-          var tempLink = document.createElement("a");
-          tempLink.href = blobUrl;
-          tempLink.download = filename;
-          document.body.appendChild(tempLink);
-          tempLink.click();
-          document.body.removeChild(tempLink);
-          window.setTimeout(function () {
-            URL.revokeObjectURL(blobUrl);
-          }, 1000);
-        })
-        .catch(function () {
-          // Fallback, falls fetch/Blob nicht verfügbar sind: Datei im Tab öffnen,
-          // dort kann sie manuell gespeichert werden (Strg/Cmd+S).
-          window.open(url, "_blank");
-        });
-    });
-  }
-
   function setupFocusMode() {
     var focusButton = document.getElementById("focusToggle");
     focusButton.addEventListener("click", function () {
@@ -180,7 +144,6 @@
       renderNavigation(document.getElementById("navRoot"), sections);
       renderTopics(document.getElementById("contentRoot"), sections);
       setupCopyButtons();
-      setupTemplateDownloads();
       setupFocusMode();
       setupNavigation(sections);
     }
