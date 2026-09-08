@@ -1,0 +1,35 @@
+<p class="lead">Der Benutzer gibt eine Uhrzeit im Format <code>hh:mm</code> ein (beide Teile immer zweistellig) sowie eine Anzahl Minuten. Berechnen und geben Sie die Uhrzeit aus, die sich ergibt, wenn man diese Minutenanzahl von der eingegebenen Uhrzeit zurückrechnet (ebenfalls im Format <code>hh:mm</code>). Ein Tageswechsel muss nicht berücksichtigt werden.</p><h4>Beispiele</h4><table class="cmp"><tr><th>Eingabe</th><th>Ausgabe</th></tr><tr><td><code>12:34 20</code></td><td><code>12:14</code></td></tr><tr><td><code>12:34 60</code></td><td><code>11:34</code></td></tr><tr><td><code>12:34 181</code></td><td><code>09:33</code></td></tr></table><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-80">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-80" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main()
+{
+    string uhrzeit;
+    int minutenabzug;
+    cin &gt;&gt; uhrzeit &gt;&gt; minutenabzug;
+
+    int stunden = stoi(uhrzeit.substr(0, 2));
+    int minuten = stoi(uhrzeit.substr(3, 2));
+
+    int gesamtminuten = stunden * 60 + minuten - minutenabzug;
+
+    int ergebnis_stunden = gesamtminuten / 60;
+    int ergebnis_minuten = gesamtminuten % 60;
+
+    if (ergebnis_stunden &lt; 10)
+        cout &lt;&lt; "0" &lt;&lt; ergebnis_stunden;
+    else
+        cout &lt;&lt; ergebnis_stunden;
+
+    cout &lt;&lt; ":";
+
+    if (ergebnis_minuten &lt; 10)
+        cout &lt;&lt; "0" &lt;&lt; ergebnis_minuten;
+    else
+        cout &lt;&lt; ergebnis_minuten;
+
+    cout &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>

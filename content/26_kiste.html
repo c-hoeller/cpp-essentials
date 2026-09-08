@@ -1,0 +1,17 @@
+<p class="lead">Lassen Sie den Benutzer Höhe, Breite und Länge einer Kiste eingeben, danach Höhe, Breite und Länge von Schachteln (jeweils in dieser Reihenfolge). Berechnen Sie, wie viele Schachteln vollständig in die Kiste passen &ndash; ohne Drehen, jede Seite bleibt an der entsprechenden Kistenseite ausgerichtet. Geben Sie nur das Ergebnis aus.</p><h4>Beispiele</h4><table class="cmp"><tr><th>Eingabe</th><th>Ausgabe</th></tr><tr><td><code>1 2 3 1 2 3</code></td><td><code>1</code></td></tr><tr><td><code>2 4 6 1 2 3</code></td><td><code>8</code></td></tr><tr><td><code>4 5 8 1 2 3</code></td><td><code>16</code></td></tr></table><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-60">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-60" class="language-cpp">#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+    int arr[6];
+    cin &gt;&gt; arr[0] &gt;&gt; arr[1] &gt;&gt; arr[2] &gt;&gt; arr[3] &gt;&gt; arr[4] &gt;&gt; arr[5];
+
+    int anzahl_hoehe = arr[0] / arr[3];
+    int anzahl_breite = arr[1] / arr[4];
+    int anzahl_laenge = arr[2] / arr[5];
+
+    cout &lt;&lt; anzahl_hoehe * anzahl_breite * anzahl_laenge &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>

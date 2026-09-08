@@ -1,0 +1,27 @@
+<p class="lead">Schreiben Sie eine Funktion <code>void ausgabeMehrzeilig(const string &amp; str)</code>, die die übergebene Zeichenkette buchstabenweise ausgibt und nach jedem <code>'.'</code>-Zeichen (direkt nach dessen Ausgabe) einen Zeilenumbruch erzeugt.</p><div class="note"><strong>Beispiel:</strong> <code>ausgabeMehrzeilig("Gregory.Peck")</code> gibt zwei Zeilen aus: <code>Gregory.</code> und <code>Peck</code>.</div><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-65">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-65" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+#include "eval.h"
+
+void ausgabeMehrzeilig(const string &amp;str)
+{
+    for (string::size_type i = 0; i &lt; str.length(); i++)
+    {
+        cout &lt;&lt; str[i];
+        if (str[i] == '.')
+            cout &lt;&lt; endl;
+    }
+}
+
+void eval()
+{
+    _AKAD_INS1 ausgabeMehrzeilig(s1);
+}
+
+int main()
+{
+    
+    eval();
+    return 0;
+}</code></pre></div>

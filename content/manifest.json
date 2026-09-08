@@ -88,5 +88,185 @@
     "group": "Fortgeschritten",
     "title": "Präprozessor & Gültigkeitsbereiche",
     "file": "15_praeprozessor.html"
+  },
+  {
+    "id": "allegleich",
+    "group": "Übungen",
+    "title": "Alle Werte im Array gleich?",
+    "file": "16_allegleich.html"
+  },
+  {
+    "id": "arraysumme",
+    "group": "Übungen",
+    "title": "Array mit 17er-Vielfachen summieren",
+    "file": "17_arraysumme.html"
+  },
+  {
+    "id": "asciicode",
+    "group": "Übungen",
+    "title": "Zahl in ASCII-Zeichen umwandeln",
+    "file": "18_asciicode.html"
+  },
+  {
+    "id": "ausgabe",
+    "group": "Übungen",
+    "title": "Array bis Sentinelwert ausgeben",
+    "file": "19_ausgabe.html"
+  },
+  {
+    "id": "copydistinct",
+    "group": "Übungen",
+    "title": "Duplikate aus Array entfernen",
+    "file": "20_copydistinct.html"
+  },
+  {
+    "id": "enthaeltzahl",
+    "group": "Übungen",
+    "title": "String: nur Ziffern enthalten?",
+    "file": "21_enthaeltzahl.html"
+  },
+  {
+    "id": "getvalue",
+    "group": "Übungen",
+    "title": "Array-Element per Zeiger lesen",
+    "file": "22_getvalue.html"
+  },
+  {
+    "id": "grossbuchstaben",
+    "group": "Übungen",
+    "title": "Großbuchstaben in String zählen",
+    "file": "23_grossbuchstaben.html"
+  },
+  {
+    "id": "istquadratzahl",
+    "group": "Übungen",
+    "title": "Quadratzahl-Test per Schleife",
+    "file": "24_istquadratzahl.html"
+  },
+  {
+    "id": "kaufrund",
+    "group": "Übungen",
+    "title": "Kaufmännisch runden",
+    "file": "25_kaufrund.html"
+  },
+  {
+    "id": "kiste",
+    "group": "Übungen",
+    "title": "Schachteln in eine Kiste packen",
+    "file": "26_kiste.html"
+  },
+  {
+    "id": "matrixaddition",
+    "group": "Übungen",
+    "title": "Matrixzeile und -spalte addieren",
+    "file": "27_matrixaddition.html"
+  },
+  {
+    "id": "matrixwert",
+    "group": "Übungen",
+    "title": "Matrixwert mit Bereichsprüfung",
+    "file": "28_matrixwert.html"
+  },
+  {
+    "id": "median",
+    "group": "Übungen",
+    "title": "Mittlere von drei Zahlen finden",
+    "file": "29_median.html"
+  },
+  {
+    "id": "mehrzeilig",
+    "group": "Übungen",
+    "title": "String nach Satzende umbrechen",
+    "file": "30_mehrzeilig.html"
+  },
+  {
+    "id": "mischen",
+    "group": "Übungen",
+    "title": "Zwei Arrays ineinander mischen",
+    "file": "31_mischen.html"
+  },
+  {
+    "id": "mitarbeiter",
+    "group": "Übungen",
+    "title": "Klasse Mitarbeiter mit Personalnummer",
+    "file": "32_mitarbeiter.html"
+  },
+  {
+    "id": "palindron",
+    "group": "Übungen",
+    "title": "Palindrom-Test (C-String)",
+    "file": "33_palindron.html"
+  },
+  {
+    "id": "persname",
+    "group": "Übungen",
+    "title": "Struct für Vor- und Nachname",
+    "file": "34_persname.html"
+  },
+  {
+    "id": "potenz",
+    "group": "Übungen",
+    "title": "Potenz iterativ mit Zwischenwerten",
+    "file": "35_potenz.html"
+  },
+  {
+    "id": "qsumme",
+    "group": "Übungen",
+    "title": "Quersumme einer Zahl berechnen",
+    "file": "36_qsumme.html"
+  },
+  {
+    "id": "restsubtraktion",
+    "group": "Übungen",
+    "title": "Modulo durch fortlaufende Subtraktion",
+    "file": "37_restsubtraktion.html"
+  },
+  {
+    "id": "reversefind",
+    "group": "Übungen",
+    "title": "Letztes Vorkommen im Array finden",
+    "file": "38_reversefind.html"
+  },
+  {
+    "id": "sekunden",
+    "group": "Übungen",
+    "title": "Sekunden in hh:mm:ss umrechnen",
+    "file": "39_sekunden.html"
+  },
+  {
+    "id": "sincos",
+    "group": "Übungen",
+    "title": "Sinus und Cosinus ausgeben",
+    "file": "40_sincos.html"
+  },
+  {
+    "id": "swap",
+    "group": "Übungen",
+    "title": "Zwei Variablen per Zeiger vertauschen",
+    "file": "41_swap.html"
+  },
+  {
+    "id": "uhrzeitminus",
+    "group": "Übungen",
+    "title": "Uhrzeit minus Minuten berechnen",
+    "file": "42_uhrzeitminus.html"
+  },
+  {
+    "id": "vektoraddition",
+    "group": "Übungen",
+    "title": "Vektoraddition mit Struct",
+    "file": "43_vektoraddition.html"
+  },
+  {
+    "id": "vergroessern",
+    "group": "Übungen",
+    "title": "Array um zwei Elemente vergrößern",
+    "file": "44_vergroessern.html"
+  },
+  {
+    "id": "zinsen",
+    "group": "Übungen",
+    "title": "Zinseszins über 10 Jahre",
+    "file": "45_zinsen.html"
   }
 ]

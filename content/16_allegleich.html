@@ -1,0 +1,41 @@
+<p class="lead">Schreiben Sie eine Funktion <code>allegleich</code>, der ein Integer-Array sowie die Anzahl der Elemente übergeben wird. Rückgabetyp ist <code>bool</code>. Die erste Anweisung der Funktion muss <code>printf("-%s-\n", __func__);</code> sein. Geprüft wird, ob alle Werte im Array identisch sind &ndash; ist das der Fall, liefert die Funktion <code>true</code>, sonst <code>false</code>.</p><div class="note"><strong>Beispiel:</strong> <code>allegleich({7,7,7}, 3)</code> &rarr; <code>true</code>, <code>allegleich({7,7,8}, 3)</code> &rarr; <code>false</code>.</div><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-49">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-49" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+#include "eval.h"
+
+
+bool allegleich(int* arr, int anzahl)
+{
+  printf("-%s-\n", __func__);
+
+  int first = arr[0];
+
+  for(int i = 1; i &lt; anzahl; i++)
+  {
+    if(first != arr[i]){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
+
+void eval()
+{
+    int a1[20] = { 1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2 };
+    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5
+     a1[i2] = i3; a1[i4] = i5;
+    cout &lt;&lt; (allegleich(a1, i1) ? "G" : "N") &lt;&lt; endl;
+}
+
+
+
+int main()
+{
+    
+   eval();
+    return 0;
+}</code></pre></div>

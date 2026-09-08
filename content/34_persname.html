@@ -1,0 +1,41 @@
+<p class="lead">Gegeben ist folgende Struktur:</p><div class="code-block"><div class="code-block-header"><span>Beispiel</span><button class="copy-btn" type="button" data-copy-target="code-70">Kopieren</button></div><pre><code id="code-70">struct pers {
+   string vname;
+   string nname;
+};</code></pre></div><p>Erzeugen Sie eine Variable dieses Typs, lassen Sie den Benutzer Vor- und Nachname eingeben (ohne erläuternde Ausgaben), befüllen Sie die Variable damit und rufen Sie die vorgegebene Funktion <code>eval</code> mit einer Referenz auf Ihre Variable auf:</p><h4>Vorgabe</h4><div class="code-block"><div class="code-block-header"><span>C++ (Vorgabe)</span><button class="copy-btn" type="button" data-copy-target="code-71">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-71" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+
+void eval(pers * p)
+{
+   cout &lt;&lt; __func__&lt;&lt; p-&gt;nname &lt;&lt; p-&gt;vname;
+}
+
+int main()
+{
+   return 0;
+}</code></pre></div><h4>Beispiele</h4><table class="cmp"><tr><th>Eingabe</th><th>Ausgabe</th></tr><tr><td><code>Max Mustermann</code></td><td><code>evalMustermannMax</code></td></tr><tr><td><code>Erika Musterfrau</code></td><td><code>evalMusterfrauErika</code></td></tr></table><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-72">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-72" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+using namespace std;
+
+struct pers
+{
+    string vname;
+    string nname;
+};
+
+void eval(pers *p)
+{
+    cout &lt;&lt; __func__ &lt;&lt; p-&gt;nname &lt;&lt; p-&gt;vname;
+}
+
+int main()
+{
+    pers p;
+    cin &gt;&gt; p.vname &gt;&gt; p.nname;
+
+    eval(&amp;p);
+
+    return 0;
+}</code></pre></div>

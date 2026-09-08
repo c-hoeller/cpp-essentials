@@ -1,0 +1,33 @@
+<p class="lead">Schreiben Sie eine Funktion <code>istQuadratzahl</code>, der ein Integer übergeben wird und die einen <code>bool</code> zurückgibt. Erste Anweisung muss <code>printf("%s\n", __func__);</code> sein. Geprüft wird (bewusst unperformant per aufsteigender Schleife, dafür einfach umzusetzen), ob das Argument eine Quadratzahl ist &ndash; also das Ergebnis der Multiplikation einer ganzen Zahl größer 0 mit sich selbst (z. B. 1, 4, 9, 16).</p><div class="note"><strong>Beispiel:</strong> <code>istQuadratzahl(9)</code> &rarr; <code>true</code> (3&sup2;), <code>istQuadratzahl(10)</code> &rarr; <code>false</code>.</div><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-58">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-58" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string.h&gt;
+#include "eval.h"
+using namespace std;
+
+bool istQuadratzahl(int n)
+{
+  printf("%s\n", __func__);
+
+  for (int index = 1; index &lt;= n; index++)
+  {
+    if (index * index == n)
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void eval()
+{
+  _AKAD_INI1
+  cout &lt;&lt; (istQuadratzahl(i1) ? "T" : "F") &lt;&lt; endl;
+}
+
+int main()
+{
+  
+  eval();
+  return 0;
+}</code></pre></div>

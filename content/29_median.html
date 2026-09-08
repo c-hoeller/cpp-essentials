@@ -1,0 +1,16 @@
+<p class="lead">Lassen Sie den Benutzer drei unterschiedliche Zahlen eingeben und geben Sie diejenige aus, die zahlenmäßig in der Mitte liegt (von der es also eine kleinere und eine größere gibt). Keine weiteren Ausgaben.</p><h4>Beispiele</h4><table class="cmp"><tr><th>Eingabe</th><th>Ausgabe</th></tr><tr><td><code>1 3 2</code></td><td><code>2</code></td></tr><tr><td><code>3 6 1</code></td><td><code>3</code></td></tr></table><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-64">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-64" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main()
+{
+    int x, y, z;
+    cin &gt;&gt; x &gt;&gt; y &gt;&gt; z;
+
+    int kleinstes = min({x, y, z});
+    int groesstes = max({x, y, z});
+
+    cout &lt;&lt; (x + y + z - kleinstes - groesstes) &lt;&lt; endl;
+
+    return 0;
+}</code></pre></div>

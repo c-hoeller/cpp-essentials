@@ -1,0 +1,36 @@
+<p class="lead">Entwickeln Sie eine Funktion <code>int reverseFind(long feld[], int len, long suchwert)</code>, die die Position des <em>letzten</em> Vorkommens von <code>suchwert</code> im Array liefert, bzw. <code>-1</code>, falls die Zahl nicht vorkommt. Erste Anweisung muss <code>printf("-%s-\n", __func__);</code> sein.</p><div class="note"><strong>Beispiel:</strong> <code>reverseFind({2,6,8,9,2,4}, 6, 2)</code> &rarr; <code>4</code> (letztes Vorkommen von 2), <code>reverseFind({2,6,8,9,2,4}, 6, 5)</code> &rarr; <code>-1</code>.</div><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-76">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-76" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+#include "eval.h"
+
+int reverseFind(long feld[], int len, long suchwert)
+{
+  printf("-%s-\n", __func__);
+
+  int lastseen = -1;
+
+  for (int i = 0; i &lt; len; i++)
+  {
+    if (feld[i] == suchwert)
+    {
+      lastseen = i;
+    }
+  }
+
+  return lastseen;
+}
+
+void eval()
+{
+  _AKAD_INI1 _AKAD_INI2 long a[23] = {2, 6, 8, 9, 2, 4, 6, 8, 1, 2, 6, 3, 8, 6, 3, 6, 8, 9, 2, 3, 6, 2, 3};
+  cout &lt;&lt; reverseFind(a, i1, i2);
+}
+
+int main()
+{
+  
+  eval();
+  return 0;
+}</code></pre></div>

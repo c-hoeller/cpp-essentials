@@ -1,0 +1,37 @@
+<p class="lead">Definieren Sie eine Struktur <code>vektor</code> mit den Integerattributen <code>x</code>, <code>y</code>, <code>z</code>. Schreiben Sie eine Funktion <code>vektor addVektor(const vektor * a, const vektor * b)</code>, die einen neuen Vektor als komponentenweise Summe der beiden übergebenen Vektoren erzeugt und zurückgibt:</p><div class="code-block"><div class="code-block-header"><span>Beispiel</span><button class="copy-btn" type="button" data-copy-target="code-81">Kopieren</button></div><pre><code id="code-81">(a)   (d)   (a+d)
+(b) + (e) = (b+e)
+(c)   (f)   (c+f)</code></pre></div><div class="note"><strong>Beispiel:</strong> <code>addVektor({1,2,3}, {4,5,6})</code> &rarr; <code>{5,7,9}</code>.</div><h4>Lösung</h4><div class="code-block"><div class="code-block-header"><span>C++</span><button class="copy-btn" type="button" data-copy-target="code-82">Kopieren</button></div><pre class="line-numbers language-cpp"><code id="code-82" class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;string.h&gt;
+#include "eval.h"
+using namespace std;
+
+struct vektor
+{
+    int x;
+    int y;
+    int z;
+};
+
+// Schreiben Sie hier den Code für Ihre zu erstellende Funktion:
+vektor addVektor(const vektor *a, const vektor *b)
+{
+    vektor result{a-&gt;x + b-&gt;x, a-&gt;y + b-&gt;y, a-&gt;z + b-&gt;z};
+    return result;
+}
+
+void eval()
+{
+    _AKAD_INI1 _AKAD_INI2 _AKAD_INI3 _AKAD_INI4 _AKAD_INI5
+        vektor a{i1, i2, i3};
+    vektor b{i1, i4, i5};
+    vektor c = addVektor(&amp;a, &amp;b);
+    cout &lt;&lt; c.x + c.y + c.z;
+}
+
+int main()
+{
+    
+    eval();
+    return 0;
+}</code></pre></div>
